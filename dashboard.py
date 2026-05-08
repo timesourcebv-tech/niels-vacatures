@@ -1,0 +1,216 @@
+"""Streamlit-dashboard voor Niels.
+
+Lokaal:        streamlit run dashboard.py
+Online:        Streamlit Community Cloud — entrypoint = dashboard.py
+"""
+from __future__ import annotations
+
+import pandas as pd
+import streamlit as st
+
+from config import NIELS_PROFILE
+from db import fetch_jobs, get_conn, stats, update_status
+
+st.set_page_config(
+    page_title="Vacatures voor Niels",
+    page_icon="🪵",
+    layout="wide",
+)
+
+STATUS_LABELS = {
+    "new": "Nieuw",
+    "interesting": "Interessant",
+    "applied": "Gesolliciteerd",
+    "rejected": "Afgewezen",
+}
+STATUS_OPTIONS = list(STATUS_LABELS.keys())
+
+
+# ──────────────────────────────────────────────────────────
+# Login-gate via Streamlit secrets (username + wachtwoord)
+# ──────────────────────────────────────────────────────────
+def login_gate() -> bool:
+    try:
+        user_required = st.secrets.get("APP_USERNAME", "")
+        pw_required = st.secrets.get("APP_PASSWORD", "")
+    except Exception:
+        user_required = pw_required = ""
+    if not pw_required:
+        return True
+    if st.session_state.get("authed"):
+        return True
+    st.title("🪵 Vacatures voor Niels")
+    with st.form("login"):
+        user = st.text_input("Gebruikersnaam")
+        pw = st.text_input("Wachtwoord", type="password")
+        submitted = st.form_submit_button("Inloggen")
+    if submitted:
+        if user.strip().lower() == user_required.strip().lower() and pw == pw_required:
+            st.session_state["authed"] = True
+            st.rerun()
+        else:
+            st.error("Onjuiste gebruikersnaam of wachtwoord.")
+    return False
+
+
+def load_df(min_score: int, statuses: list[str]) -> pd.DataFrame:
+    rows = fetch_jobs(min_score=min_score, statuses=statuses, limit=1000)
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame([dict(r) for r in rows])
+
+
+def header() -> None:
+    st.title("🪵 Vacatures voor Niels Hallingse")
+    st.caption(
+        f"Senior commerciële & leidinggevende rollen in de houtwereld — "
+        f"{NIELS_PROFILE['experience_years']}+ jaar ervaring, "
+        f"laatste functie {NIELS_PROFILE['career_history'][-1]}"
+    )
+
+    s = stats()
+    cols = st.columns(5)
+    cols[0].metric("Totaal", s.get("total") or 0)
+    cols[1].metric("Nieuw", s.get("new_count") or 0)
+    cols[2].metric("Interessant", s.get("interesting_count") or 0)
+    cols[3].metric("Gesolliciteerd", s.get("applied_count") or 0)
+    cols[4].metric("Afgewezen", s.get("rejected_count") or 0)
+    last_run = (s.get("last_run") or "—")[:16].replace("T", " ")
+    st.caption(f"Laatst bijgewerkt: {last_run}")
+
+
+def sidebar_filters() -> tuple[int, list[str], str, list[str]]:
+    with st.sidebar:
+        st.header("Filters")
+        min_score = st.slider("Minimale match-score", 0, 100, 50, step=5)
+        statuses = st.multiselect(
+            "Status",
+            options=STATUS_OPTIONS,
+            default=["new", "interesting"],
+            format_func=lambda x: STATUS_LABELS[x],
+        )
+
+        with get_conn() as conn:
+            sources_rows = conn.execute("SELECT DISTINCT source FROM jobs").fetchall()
+        sources_all = sorted([r["source"] for r in sources_rows])
+        sources = st.multiselect("Bronnen", sources_all, default=sources_all)
+
+        search = st.text_input("Zoeken in titel/bedrijf", "")
+
+        st.divider()
+        with st.expander("Niels' profiel"):
+            for line in NIELS_PROFILE["specialties"]:
+                st.markdown(f"- {line}")
+            st.markdown("**Talen**: " + ", ".join(NIELS_PROFILE["languages"]))
+            st.markdown("**Locatie**: " + NIELS_PROFILE["location"])
+
+        st.divider()
+        st.caption(
+            "Het scraper-script `run.py` wordt dagelijks via GitHub Actions "
+            "uitgevoerd. Druk niet handmatig op refresh — kom morgen weer kijken "
+            "voor nieuwe vacatures."
+        )
+    return min_score, statuses, search, sources
+
+
+def render_job_card(row: pd.Series) -> None:
+    status = row["status"]
+    score = int(row["score"])
+    title = row["title"]
+    company = row["company"] or "Onbekend"
+    location = row["location"] or "—"
+    posted = (row["posted_at"] or row["discovered_at"] or "")[:10]
+    source = row["source"]
+
+    score_emoji = "🟢" if score >= 70 else ("🟡" if score >= 50 else "⚪")
+
+    with st.container(border=True):
+        c1, c2 = st.columns([5, 2])
+        with c1:
+            st.markdown(f"### {score_emoji} [{title}]({row['url']})")
+            st.markdown(
+                f"**{company}** · {location} · "
+                f"<sub>via {source} · {posted}</sub>",
+                unsafe_allow_html=True,
+            )
+            if row.get("description"):
+                with st.expander("Snippet"):
+                    st.write(row["description"])
+            if row.get("notes"):
+                st.info(f"📝 {row['notes']}")
+        with c2:
+            st.metric("Match", f"{score}/100")
+            new_status = st.selectbox(
+                "Status",
+                STATUS_OPTIONS,
+                index=STATUS_OPTIONS.index(status) if status in STATUS_OPTIONS else 0,
+                format_func=lambda s: STATUS_LABELS[s],
+                key=f"status_{row['id']}",
+                label_visibility="collapsed",
+            )
+            notes = st.text_input(
+                "Notitie",
+                value=row.get("notes") or "",
+                key=f"notes_{row['id']}",
+                placeholder="Notitie...",
+                label_visibility="collapsed",
+            )
+            current_notes = row.get("notes") or ""
+            if new_status != status or notes != current_notes:
+                if st.button("Opslaan", key=f"save_{row['id']}"):
+                    update_status(int(row["id"]), new_status, notes or None)
+                    st.rerun()
+
+
+def main() -> None:
+    if not login_gate():
+        return
+
+    header()
+    min_score, statuses, search, sources = sidebar_filters()
+
+    if not statuses:
+        st.info("Selecteer minstens één status in de sidebar.")
+        return
+
+    df = load_df(min_score=min_score, statuses=statuses)
+    if df.empty:
+        st.warning(
+            "Geen vacatures gevonden voor deze filters. "
+            "Run `python run.py` lokaal om vacatures op te halen."
+        )
+        return
+
+    if sources:
+        df = df[df["source"].isin(sources)]
+    if search:
+        s = search.lower()
+        mask = (
+            df["title"].str.lower().str.contains(s, na=False)
+            | df["company"].fillna("").str.lower().str.contains(s, na=False)
+        )
+        df = df[mask]
+
+    if df.empty:
+        st.info("Geen vacatures matchen jouw filters.")
+        return
+
+    sort_by = st.radio(
+        "Sorteer op",
+        ["Match-score", "Datum gevonden"],
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+    if sort_by == "Datum gevonden":
+        df = df.sort_values("discovered_at", ascending=False)
+    else:
+        df = df.sort_values(["score", "discovered_at"], ascending=[False, False])
+
+    st.subheader(f"{len(df)} vacature(s)")
+
+    for _, row in df.iterrows():
+        render_job_card(row)
+
+
+if __name__ == "__main__":
+    main()

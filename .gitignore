@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+*.log
+
+# Streamlit secrets — NEVER commit
+.streamlit/secrets.toml
+
+# Persoonlijke documenten — NEVER commit
+*.pdf
+*.docx
+
+# Lokale draft / temp
+*.bak
+*.tmp
