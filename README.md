@@ -157,6 +157,10 @@ Niels-Vacatures/
 - **Nationale Vacaturebank** zit achter DPG-consent gate — vergt cookie-flow
   die we niet automatiseren.
 - **Werk.nl (UWV)** is een SPA zonder publieke API.
+- **Bouwjobs.nl** werkt **lokaal** maar geeft **HTTP 403 vanaf GitHub Actions**
+  (datacenter-IP gefilterd). De daily cron skipt deze bron dus de facto. Wil
+  je Bouwjobs-vacatures meenemen, run `python run.py` af en toe lokaal —
+  de DB-commit-flow accepteert die.
 - LinkedIn-cards bevatten **geen omschrijving** — scoring werkt op titel +
   bedrijfsnaam + locatie. Voor diepere matching zou een tweede pass die
   detail-pagina's ophaalt nodig zijn.
