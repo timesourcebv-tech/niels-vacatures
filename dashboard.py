@@ -57,7 +57,9 @@ def load_df(min_score: int, statuses: list[str]) -> pd.DataFrame:
     rows = fetch_jobs(min_score=min_score, statuses=statuses, limit=1000)
     if not rows:
         return pd.DataFrame()
-    return pd.DataFrame([dict(r) for r in rows])
+    df = pd.DataFrame([dict(r) for r in rows])
+    # NaN → None zodat truthy-checks (`or`) en string-slicing werken zoals verwacht
+    return df.astype(object).where(pd.notna(df), None)
 
 
 def header() -> None:
@@ -119,7 +121,7 @@ def render_job_card(row: pd.Series) -> None:
     title = row["title"]
     company = row["company"] or "Onbekend"
     location = row["location"] or "—"
-    posted = (row["posted_at"] or row["discovered_at"] or "")[:10]
+    posted = str(row.get("posted_at") or row.get("discovered_at") or "")[:10]
     source = row["source"]
 
     score_emoji = "🟢" if score >= 70 else ("🟡" if score >= 50 else "⚪")
