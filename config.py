@@ -147,7 +147,47 @@ HOUT_COMPANIES_BE = [
     "wijckmans hout", "deceuninck", "houthandel andries",
 ]
 
-HOUT_COMPANIES = HOUT_COMPANIES_NL + HOUT_COMPANIES_BE
+# Bouwmaterialen-grossiers / -handelaren NL (Niels' segment uit CV)
+BOUWMATERIAAL_COMPANIES_NL = [
+    # Grote ketens / grossiers
+    "raab karcher", "raab-karcher", "saint-gobain",
+    "stiho", "bouwmaat", "bmn", "bouwcenter",
+    "pontmeyer", "jongeneel", "wilbrink",
+    "deli home", "deli xl",
+    "cb bouwmaterialen", "cb hout",
+    "bouwspecialist", "isobouw",
+    # Regionaal / familiebedrijf
+    "heuts", "niemeijer bouwmaterialen", "duys bouwmaterialen",
+    "linthorst", "klomps bouwmaterialen", "brouwers bouwmaterialen",
+    "slaakboer", "bron bouwmaterialen", "holtkamp",
+    "boumaat", "huberluxx", "huberlu",
+    "galvano", "hmc bouw", "ibc bouw",
+    "wolseley", "sanitiq", "hofa", "vbi",
+    # Bouwmateriaal-fabrikanten waar commerciële rol zinnig is
+    "wienerberger", "rockwool", "knauf", "saint-gobain weber",
+    "gypsum nederland", "kingspan", "etex", "isover",
+    "royal mosa", "mosa tegels",
+    "fermacell", "rigips", "ytong", "siniat",
+    # Bouwmateriaal-toeleveranciers (kozijnen / deuren / gevel)
+    "berkvens", "skantrae", "weekamp", "bruynzeel deuren",
+    "bruynzeel keukens", "metaglas", "schüco", "schueco",
+    "reynaers", "alukon", "rehau",
+    "rockpanel", "trespa", "eternit", "cembrit",
+]
+
+# Bouwmaterialen NL+BE Vlaanderen
+BOUWMATERIAAL_COMPANIES_BE = [
+    "lecot", "lambrecht bouwmaterialen", "loose bouw",
+    "buggenhout bouwmaterialen", "facq", "desco",
+    "imperial bouwmaterialen", "vlassenroot", "decotrans",
+    "pieckaert", "plaspack", "devagro",
+    "bostoen", "wienerberger benelux", "etex",
+    "deceuninck", "reynaers belgium",
+]
+
+BOUWMATERIAAL_COMPANIES = BOUWMATERIAAL_COMPANIES_NL + BOUWMATERIAAL_COMPANIES_BE
+
+HOUT_COMPANIES = HOUT_COMPANIES_NL + HOUT_COMPANIES_BE + BOUWMATERIAAL_COMPANIES
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
 RECRUITERS_BUILDING = [
