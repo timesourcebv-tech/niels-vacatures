@@ -12,7 +12,7 @@ import sys
 from config import BROAD_QUERIES, MAX_RESULTS_PER_QUERY, QUERIES
 from db import stats, upsert_jobs
 from scoring import score_job
-from scrapers import scrape_bouwjobs, scrape_jobbird, scrape_linkedin
+from scrapers import scrape_bouwjobs, scrape_jobbird, scrape_linkedin, scrape_stepstone
 
 logging.basicConfig(
     level=logging.INFO,
@@ -65,6 +65,19 @@ def run_once(include_belgium: bool = False) -> dict:
             all_jobs.extend(jobs)
         except Exception as e:
             log.exception("Jobbird '%s' failed: %s", q, e)
+
+    # StepStone — NL + BE (Vlaanderen) als include_belgium
+    stepstone_locs = ["nederland"]
+    if include_belgium:
+        stepstone_locs.append("vlaanderen")
+    for loc in stepstone_locs:
+        for q in BROAD_QUERIES:
+            try:
+                jobs = scrape_stepstone(q, location=loc, max_results=MAX_RESULTS_PER_QUERY)
+                _score(jobs)
+                all_jobs.extend(jobs)
+            except Exception as e:
+                log.exception("StepStone '%s' (%s) failed: %s", q, loc, e)
 
     log.info("Totaal opgehaald: %d", len(all_jobs))
 
