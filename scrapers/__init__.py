@@ -16,10 +16,12 @@ from .linkedin import scrape_linkedin
 from .bouwjobs import scrape_bouwjobs
 from .jobbird import scrape_jobbird
 from .stepstone import scrape_stepstone
+from .adzuna import scrape_adzuna
 
 ALL_SCRAPERS = [
     ("linkedin", scrape_linkedin),
     ("bouwjobs", scrape_bouwjobs),
     ("jobbird", scrape_jobbird),
     ("stepstone", scrape_stepstone),
+    ("adzuna", scrape_adzuna),
 ]
