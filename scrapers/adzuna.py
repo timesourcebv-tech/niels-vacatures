@@ -46,16 +46,14 @@ def scrape_adzuna(
             "app_key": app_key,
             "what": query,
             "results_per_page": per_page,
-            "page": page,
             "max_days_old": 30,
-            "content-type": "application/json",
         }
         try:
             time.sleep(REQUEST_DELAY_SECONDS)
             resp = requests.get(
                 f"{ADZUNA_BASE}/{country}/search/{page}",
                 params=params,
-                headers={"User-Agent": USER_AGENT},
+                headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
                 timeout=REQUEST_TIMEOUT,
             )
         except requests.RequestException as e:
