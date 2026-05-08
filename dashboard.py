@@ -8,8 +8,21 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from config import NIELS_PROFILE
+from config import CITIES_BE_NL, CITIES_NEAR, CITIES_RANDSTAD, NIELS_PROFILE
 from db import fetch_jobs, get_conn, stats, update_status
+
+REGIONS = {
+    "Alles": None,
+    "Zaanstreek + omgeving": CITIES_NEAR,
+    "Randstad": CITIES_RANDSTAD,
+    "Nederland (totaal)": ["nederland", "netherlands"] + CITIES_NEAR + CITIES_RANDSTAD + [
+        "noord-holland", "zuid-holland", "utrecht", "gelderland", "noord-brabant",
+        "limburg", "overijssel", "drenthe", "groningen", "friesland", "zeeland", "flevoland",
+        "eindhoven", "tilburg", "breda", "nijmegen", "arnhem", "enschede", "groningen",
+        "maastricht", "venlo", "den bosch", "'s-hertogenbosch", "apeldoorn", "zwolle",
+    ],
+    "Vlaanderen / België": ["belgië", "belgie", "belgium", "vlaanderen", "flanders"] + CITIES_BE_NL,
+}
 
 st.set_page_config(
     page_title="Vacatures voor Niels",
@@ -81,7 +94,7 @@ def header() -> None:
     st.caption(f"Laatst bijgewerkt: {last_run}")
 
 
-def sidebar_filters() -> tuple[int, list[str], str, list[str]]:
+def sidebar_filters() -> tuple[int, list[str], str, list[str], str]:
     with st.sidebar:
         st.header("Filters")
         min_score = st.slider("Minimale match-score", 0, 100, 50, step=5)
@@ -91,6 +104,8 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str]]:
             default=["new", "interesting"],
             format_func=lambda x: STATUS_LABELS[x],
         )
+
+        region = st.selectbox("Regio", list(REGIONS.keys()), index=0)
 
         with get_conn() as conn:
             sources_rows = conn.execute("SELECT DISTINCT source FROM jobs").fetchall()
@@ -112,7 +127,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str]]:
             "uitgevoerd. Druk niet handmatig op refresh — kom morgen weer kijken "
             "voor nieuwe vacatures."
         )
-    return min_score, statuses, search, sources
+    return min_score, statuses, search, sources, region
 
 
 def render_job_card(row: pd.Series) -> None:
@@ -169,7 +184,7 @@ def main() -> None:
         return
 
     header()
-    min_score, statuses, search, sources = sidebar_filters()
+    min_score, statuses, search, sources, region = sidebar_filters()
 
     if not statuses:
         st.info("Selecteer minstens één status in de sidebar.")
@@ -185,6 +200,13 @@ def main() -> None:
 
     if sources:
         df = df[df["source"].isin(sources)]
+    region_terms = REGIONS.get(region)
+    if region_terms:
+        loc_lower = df["location"].fillna("").str.lower()
+        mask = pd.Series(False, index=df.index)
+        for term in region_terms:
+            mask = mask | loc_lower.str.contains(term, na=False, regex=False)
+        df = df[mask]
     if search:
         s = search.lower()
         mask = (
