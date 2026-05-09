@@ -176,14 +176,31 @@ st.markdown(
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    /* Hoge-specificity globale typografie — Streamlit gebruikt 'Source Sans 3' standaard */
-    [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer"] *,
-    [data-testid="stMain"], [data-testid="stMain"] *,
-    [data-testid="stSidebar"], [data-testid="stSidebar"] *,
-    [data-testid="stHeader"], [data-testid="stHeader"] *,
-    section.main, section.main *,
-    .stApp, .stApp * {
+    /* Globale typografie — Streamlit gebruikt 'Source Sans 3' standaard.
+       Selectors sluiten icon-fonts (Material Symbols) uit zodat icoonglyphs
+       blijven werken. */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stSidebar"],
+    [data-testid="stHeader"],
+    section.main,
+    .stApp,
+    .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5,
+    .stApp label, .stApp button, .stApp input, .stApp textarea, .stApp select,
+    .stApp div:not([class*="material"]):not([class*="Icon"]),
+    .stApp span:not([class*="material"]):not([class*="Icon"]) {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    /* Material icons herstellen — Streamlit gebruikt deze voor pijltjes etc. */
+    [class*="material-symbols"],
+    [class*="material-icons"],
+    span.material-symbols-outlined,
+    span.material-symbols-rounded,
+    [data-testid="stExpanderToggleIcon"] *,
+    [data-testid="stIcon"] * {
+        font-family: "Material Symbols Outlined", "Material Symbols Rounded",
+                     "Material Icons", "Material Icons Outlined" !important;
     }
 
     /* Achtergrond — meerdere selectors voor zekerheid */
