@@ -15,8 +15,23 @@ import pandas as pd
 import streamlit as st
 from bs4 import BeautifulSoup
 
-from config import NIELS_PROFILE
+from config import HOUT_COMPANIES, INDUSTRY_KEYWORDS, NIELS_PROFILE
 from db import fetch_jobs, get_conn, stats, toggle_favorite, update_status
+
+
+def _industry_match(row: pd.Series) -> bool:
+    """True als titel, bedrijf óf beschrijving een hout/bouw-signaal bevat."""
+    title = str(row.get("title") or "").lower()
+    company = str(row.get("company") or "").lower()
+    desc = str(row.get("description") or "").lower()[:1500]
+    blob = f" {title} {company} {desc} "
+    for kw in INDUSTRY_KEYWORDS:
+        if _re.search(r"\b" + _re.escape(kw) + r"\b", blob):
+            return True
+    for c in HOUT_COMPANIES:
+        if _re.search(r"\b" + _re.escape(c) + r"\b", company):
+            return True
+    return False
 
 
 def _clean_description(raw: object) -> str:
@@ -612,7 +627,7 @@ def header() -> None:
     st.caption(f"Laatst bijgewerkt: {last_run}")
 
 
-def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
+def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool, bool]:
     with st.sidebar:
         # Theme-toggle bovenaan
         new_dark = st.toggle(
@@ -625,6 +640,13 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
             st.rerun()
         st.divider()
         st.header("Filters")
+
+        vakgebied_only = st.checkbox(
+            "Alleen kernvakgebied",
+            value=True,
+            help="Toon alleen vacatures met hout- of bouwmaterialen-signaal in "
+                 "titel, bedrijfsnaam of beschrijving.",
+        )
 
         # Status & favorieten worden via de tegels bovenaan bestuurd.
         active = st.session_state.get("active_view", "all")
@@ -700,7 +722,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
             "uitgevoerd. Druk niet handmatig op refresh — kom morgen weer kijken "
             "voor nieuwe vacatures."
         )
-    return min_score, statuses, search, sources, provincies, favorites_only
+    return min_score, statuses, search, sources, provincies, favorites_only, vakgebied_only
 
 
 def render_job_card(row: pd.Series) -> None:
@@ -778,7 +800,7 @@ def main() -> None:
         return
 
     header()
-    min_score, statuses, search, sources, provincies, favorites_only = sidebar_filters()
+    min_score, statuses, search, sources, provincies, favorites_only, vakgebied_only = sidebar_filters()
 
     if not statuses:
         st.info("Selecteer minstens één status in de sidebar.")
@@ -794,6 +816,8 @@ def main() -> None:
 
     if favorites_only:
         df = df[df["favorite"].fillna(0).astype(int) == 1]
+    if vakgebied_only and not df.empty:
+        df = df[df.apply(_industry_match, axis=1)]
     if sources:
         df = df[df["source"].isin(sources)]
     if provincies and len(provincies) < len(PROVINCIES):
