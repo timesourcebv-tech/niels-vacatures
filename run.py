@@ -101,6 +101,14 @@ def run_once(include_belgium: bool = False) -> dict:
     inserted, skipped = upsert_jobs(relevant)
     log.info("Opgeslagen: %d nieuw, %d bekend (score geüpdatet)", inserted, skipped)
 
+    # Cleanup: gooi vacatures weg die door scoring-updates onder de drempel zijn
+    # gevallen (bv. nieuwe negative-terms). Houdt DB schoon en dashboard relevant.
+    from db import get_conn as _gc
+    with _gc() as conn:
+        purged = conn.execute("DELETE FROM jobs WHERE score < 25").rowcount
+        if purged:
+            log.info("Cleanup: %d niet-relevante vacatures verwijderd uit DB", purged)
+
     # Enrichment: ophalen van vacature-omschrijvingen via JSON-LD JobPosting
     # (LinkedIn/Jobbird/StepStone-cards bevatten geen description in zoekresultaten)
     enrich_stats = enrich_descriptions(limit=200, min_score=30)
