@@ -6,6 +6,7 @@ Online:        Streamlit Community Cloud — entrypoint = dashboard.py
 from __future__ import annotations
 
 import datetime as _dt
+import hashlib as _hashlib
 import html as _html
 import re as _re
 
@@ -437,6 +438,12 @@ STATUS_OPTIONS = list(STATUS_LABELS.keys())
 # Login-gate via Streamlit secrets (username + wachtwoord)
 # Username wordt onthouden in een cookie (90 dagen).
 # ──────────────────────────────────────────────────────────
+def _auth_token(user: str, pw: str) -> str:
+    """Tokenize de credentials zodat de session-cookie ongeldig wordt
+    zodra het wachtwoord wijzigt."""
+    return _hashlib.sha256(f"{user}:{pw}:nv-session-v1".encode()).hexdigest()
+
+
 def login_gate() -> bool:
     try:
         user_required = st.secrets.get("APP_USERNAME", "")
@@ -449,6 +456,14 @@ def login_gate() -> bool:
         return True
 
     cookies = stx.CookieManager(key="niels_vac_cookies")
+
+    # Auto-login via persistent session-cookie (max 30 dagen)
+    expected_token = _auth_token(user_required, pw_required)
+    saved_token = cookies.get("niels_session")
+    if saved_token and saved_token == expected_token:
+        st.session_state["authed"] = True
+        return True
+
     saved_user = cookies.get("niels_username") or ""
 
     st.markdown(
@@ -463,6 +478,7 @@ def login_gate() -> bool:
     with st.form("login"):
         user = st.text_input("Gebruikersnaam", value=saved_user)
         pw = st.text_input("Wachtwoord", type="password")
+        remember = st.checkbox("30 dagen ingelogd blijven", value=True)
         submitted = st.form_submit_button("Inloggen")
     if submitted:
         if user.strip().lower() == user_required.strip().lower() and pw == pw_required:
@@ -470,11 +486,27 @@ def login_gate() -> bool:
                 "niels_username", user,
                 expires_at=_dt.datetime.now() + _dt.timedelta(days=90),
             )
+            if remember:
+                cookies.set(
+                    "niels_session", expected_token,
+                    expires_at=_dt.datetime.now() + _dt.timedelta(days=30),
+                )
             st.session_state["authed"] = True
             st.rerun()
         else:
             st.error("Onjuiste gebruikersnaam of wachtwoord.")
     return False
+
+
+def logout() -> None:
+    """Verwijder session-cookie en sessie-state."""
+    try:
+        cookies = stx.CookieManager(key="niels_vac_cookies")
+        cookies.delete("niels_session")
+    except Exception:
+        pass
+    st.session_state["authed"] = False
+    st.rerun()
 
 
 def load_df(min_score: int, statuses: list[str]) -> pd.DataFrame:
@@ -581,6 +613,9 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
                 st.markdown(f"- {line}")
             st.markdown("**Talen**: " + ", ".join(NIELS_PROFILE["languages"]))
             st.markdown("**Locatie**: " + NIELS_PROFILE["location"])
+
+        if st.button("Uitloggen", key="logout_btn", use_container_width=True):
+            logout()
 
         st.divider()
         st.caption(
