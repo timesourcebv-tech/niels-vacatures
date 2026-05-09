@@ -120,11 +120,10 @@ def score_job(
     if any(neg in loc for neg in NEGATIVE_LOCATIONS_BE):
         score -= 30
 
-    # Cap op 35 als geen enkel hout/industrie-signaal — voorkomt false positives.
-    # Verzacht alleen als de titel sterk match maakt OP Niels' doelrollen EN
-    # de description tenminste een vakgebied-hint geeft. Dit voorkomt dat
-    # "Senior Business Development Manager FMCG" hoog scoort.
+    # Geen vakgebied-signaal in titel, bedrijf én beschrijving → niet relevant.
+    # Vacature komt niet in DB (run.py filtert op score >= 25 + cleanup
+    # verwijdert score < 25).
     if not has_industry_signal:
-        score = min(score, 35)
+        return 0
 
     return max(0, min(100, score))

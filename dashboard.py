@@ -640,13 +640,8 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool, 
             st.rerun()
         st.divider()
         st.header("Filters")
-
-        vakgebied_only = st.checkbox(
-            "Alleen kernvakgebied",
-            value=True,
-            help="Toon alleen vacatures met hout- of bouwmaterialen-signaal in "
-                 "titel, bedrijfsnaam of beschrijving.",
-        )
+        # Kernvakgebied wordt al bij scrape afgedwongen — geen toggle meer nodig.
+        vakgebied_only = False
 
         # Status & favorieten worden via de tegels bovenaan bestuurd.
         active = st.session_state.get("active_view", "all")
