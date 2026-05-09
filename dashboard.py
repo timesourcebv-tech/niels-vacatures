@@ -386,35 +386,46 @@ st.markdown(
     .nv-fav-btn button:hover { transform: scale(1.15); background: transparent !important; }
     .nv-fav-btn button:focus { outline: none !important; box-shadow: none !important; }
 
-    /* Klikbare metric-tegels bovenaan */
+    /* Klikbare metric-tegels bovenaan — zen vibe */
     .nv-metric-tile button {
-        background: #F5F5F7 !important;
-        border: 1px solid transparent !important;
-        border-radius: 12px !important;
-        padding: 1rem 1.2rem !important;
+        background: var(--nv-card) !important;
+        border: 1px solid var(--nv-border) !important;
+        border-radius: 16px !important;
+        padding: 1.05rem 1.25rem !important;
         height: auto !important;
-        min-height: 5.5rem !important;
+        min-height: 5.6rem !important;
         text-align: left !important;
         white-space: pre-line !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         line-height: 1.35 !important;
-        color: #1D1D1F !important;
-        transition: all 0.15s ease;
+        color: var(--nv-text) !important;
+        transition: all 0.18s ease;
     }
     .nv-metric-tile button:hover {
-        background: #ECECF0 !important;
-        border-color: #D2D2D7 !important;
+        background: var(--nv-card) !important;
+        border-color: var(--nv-primary) !important;
+        transform: translateY(-1px);
     }
     .nv-metric-tile-active button {
-        background: #FFFFFF !important;
-        border-color: #0071E3 !important;
-        box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15) !important;
+        background: var(--nv-primary) !important;
+        border-color: var(--nv-primary) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(15, 76, 58, 0.22) !important;
+    }
+    .nv-metric-tile-active button:hover {
+        background: var(--nv-primary-hover) !important;
+        color: #FFFFFF !important;
     }
     .nv-metric-tile button p {
-        font-size: 0.82rem !important;
-        color: #6E6E73 !important;
-        margin: 0 0 0.3rem 0 !important;
+        font-size: 0.78rem !important;
+        color: var(--nv-text-3) !important;
+        margin: 0 0 0.35rem 0 !important;
         font-weight: 500 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+    }
+    .nv-metric-tile-active button p {
+        color: rgba(255,255,255,0.75) !important;
     }
     </style>
     """,
