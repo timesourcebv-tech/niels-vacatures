@@ -150,9 +150,19 @@ def render_job_card(row: pd.Series) -> None:
                 f"<sub>via {source} · {posted}</sub>",
                 unsafe_allow_html=True,
             )
-            if row.get("description"):
-                with st.expander("Snippet"):
-                    st.write(row["description"])
+            desc_raw = row.get("description")
+            if desc_raw:
+                desc = str(desc_raw).strip()
+                # Toon eerste ~280 chars als compacte samenvatting onder bedrijfsregel
+                short = desc if len(desc) <= 280 else desc[:277].rsplit(" ", 1)[0] + "…"
+                st.markdown(
+                    f"<div style='color:#5B4A36;font-size:0.92rem;margin:0.3rem 0;'>{short}</div>",
+                    unsafe_allow_html=True,
+                )
+                # Volledige beschrijving als die langer is
+                if len(desc) > 280:
+                    with st.expander("Volledige beschrijving"):
+                        st.write(desc)
             if row.get("notes"):
                 st.info(f"📝 {row['notes']}")
         with c2:

@@ -11,6 +11,7 @@ import sys
 
 from config import BROAD_QUERIES, MAX_RESULTS_PER_QUERY, QUERIES
 from db import stats, upsert_jobs
+from enrichment import enrich_descriptions
 from scoring import score_job
 from scrapers import scrape_adzuna, scrape_bouwjobs, scrape_jobbird, scrape_linkedin, scrape_stepstone
 
@@ -99,6 +100,11 @@ def run_once(include_belgium: bool = False) -> dict:
 
     inserted, skipped = upsert_jobs(relevant)
     log.info("Opgeslagen: %d nieuw, %d bekend (score geüpdatet)", inserted, skipped)
+
+    # Enrichment: ophalen van vacature-omschrijvingen via JSON-LD JobPosting
+    # (LinkedIn/Jobbird/StepStone-cards bevatten geen description in zoekresultaten)
+    enrich_stats = enrich_descriptions(limit=200, min_score=30)
+    log.info("Enrichment-resultaat: %s", enrich_stats)
 
     s = stats()
     log.info(
