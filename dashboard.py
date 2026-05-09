@@ -174,34 +174,10 @@ else:
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    /* Inter import niet meer gebruikt — Streamlit's Source Sans 3 behouden */
 
-    /* Globale typografie — Streamlit gebruikt 'Source Sans 3' standaard.
-       Selectors sluiten icon-fonts (Material Symbols) uit zodat icoonglyphs
-       blijven werken. */
-    [data-testid="stAppViewContainer"],
-    [data-testid="stMain"],
-    [data-testid="stSidebar"],
-    [data-testid="stHeader"],
-    section.main,
-    .stApp,
-    .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5,
-    .stApp label, .stApp button, .stApp input, .stApp textarea, .stApp select,
-    .stApp div:not([class*="material"]):not([class*="Icon"]),
-    .stApp span:not([class*="material"]):not([class*="Icon"]) {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
-    }
-
-    /* Material icons herstellen — Streamlit gebruikt deze voor pijltjes etc. */
-    [class*="material-symbols"],
-    [class*="material-icons"],
-    span.material-symbols-outlined,
-    span.material-symbols-rounded,
-    [data-testid="stExpanderToggleIcon"] *,
-    [data-testid="stIcon"] * {
-        font-family: "Material Symbols Outlined", "Material Symbols Rounded",
-                     "Material Icons", "Material Icons Outlined" !important;
-    }
+    /* Streamlit's standaard 'Source Sans 3' font behouden zodat
+       Material Symbols icons (pijltjes, hartjes etc.) blijven werken. */
 
     /* Achtergrond — meerdere selectors voor zekerheid */
     [data-testid="stAppViewContainer"] { background: #FAFAF7 !important; }
@@ -222,24 +198,16 @@ st.markdown(
         --nv-tag-bg: #EFEDE6;
     }
 
-    /* Globale typografie — Inter (universeel goed leesbaar) */
-    html, body, [class*="css"], .stApp, [data-testid="stSidebar"],
-    .stMarkdown, .stMarkdown p, .stMarkdown div, button, input, select, textarea {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    /* Smoothing en hoofd-tekst kleur. Geen font-family override:
+       Streamlit's Source Sans 3 + Material Symbols icons blijven intact. */
+    [data-testid="stAppViewContainer"], [data-testid="stSidebar"] {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    body, .stApp {
-        font-size: 16px;
-    }
     h1, h2, h3, h4 {
-        font-family: 'Inter', -apple-system, sans-serif !important;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.015em;
         color: #0E1E1A;
-        font-weight: 600;
-    }
-    .stApp {
-        background: #FFFFFF;
+        font-weight: 700;
     }
 
     /* Header */
