@@ -112,6 +112,26 @@ INDUSTRY_KEYWORDS = [
     "kozijnen", "deuren", "hsb",
     "timmerwerk", "timmerindustrie", "schrijnwerkerij",
     "parket", "houten vloeren",
+    # Bouwsector — directe afnemers van hout/bouwmateriaal
+    "aannemer", "aannemerij", "bouwbedrijf",
+    "woningbouw", "utiliteitsbouw",
+    "prefab", "prefabricage", "prefabbouw",
+    # Meubelindustrie / interieurbouw (hout-gebruikers)
+    "meubelindustrie", "meubelmaker", "meubelfabrikant",
+    "meubelproductie", "interieurbouw", "interieurmaker",
+    # Verpakkingsindustrie hout
+    "pallet", "pallets", "palletindustrie",
+    "houten verpakking", "exportkrat", "houten kratten",
+    # Tuinhout / buitenhout
+    "tuinhout", "schutting", "tuinhuis", "vlonder",
+    "terrasplank", "buitenhout",
+    # Gevel- en daktechniek (hout/plaat-toepassingen)
+    "gevelbouw", "geveltechniek", "gevelelement",
+    "dakconstructie", "kapconstructie", "dakelement",
+    # Isolatie (vaak via dezelfde grossier als hout/plaat)
+    "isolatieplaat", "isolatiemateriaal",
+    # Hout-halffabricaten / dimensies
+    "balken", "planken", "latten", "rondhout", "schrooth",
 ]
 
 # Bekende hout/bouwmateriaal-bedrijven NL (boost score als werkgever match)
