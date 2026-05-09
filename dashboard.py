@@ -201,7 +201,7 @@ st.markdown(
     h1, h2, h3, h4 {
         font-family: 'Inter', -apple-system, sans-serif !important;
         letter-spacing: -0.01em;
-        color: var(--nv-text);
+        color: #0E1E1A;
         font-weight: 600;
     }
     .stApp {
@@ -212,18 +212,18 @@ st.markdown(
     .nv-header {
         padding: 2rem 0 1rem 0;
         margin: 0 0 1.5rem 0;
-        border-bottom: 1px solid var(--nv-border);
+        border-bottom: 1px solid #E8E6DF;
     }
     .nv-header h1 {
         font-size: 2.1rem;
         font-weight: 700;
         letter-spacing: -0.015em;
-        color: var(--nv-text);
+        color: #0E1E1A;
         margin: 0 0 0.4rem 0;
         line-height: 1.2;
     }
     .nv-header .nv-subtitle {
-        color: var(--nv-text-3);
+        color: #8B958F;
         font-size: 1.05rem;
         font-weight: 400;
         margin: 0;
@@ -232,26 +232,26 @@ st.markdown(
 
     /* Metrics */
     [data-testid="stMetric"] {
-        background: var(--nv-card);
+        background: #FFFFFF;
         padding: 1rem 1.2rem;
         border-radius: 12px;
     }
     [data-testid="stMetricValue"] {
         font-weight: 600;
-        color: var(--nv-text);
+        color: #0E1E1A;
         font-size: 1.6rem;
         letter-spacing: -0.02em;
     }
     [data-testid="stMetricLabel"] {
         font-size: 0.85rem;
-        color: var(--nv-text-3);
+        color: #8B958F;
         font-weight: 500;
     }
 
     /* Vacature-cards */
     [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
-        background: var(--nv-card) !important;
-        border: 1px solid var(--nv-border) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E8E6DF !important;
         border-radius: 14px !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -271,22 +271,22 @@ st.markdown(
     }
     .nv-score-high { background: #E8F5E9; color: #1B5E20; }
     .nv-score-mid  { background: #FFF3E0; color: #B26A00; }
-    .nv-score-low  { background: #F2F2F7; color: var(--nv-text-3); }
+    .nv-score-low  { background: #F2F2F7; color: #8B958F; }
 
     /* Vacature-titel */
     .nv-job-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: var(--nv-text);
+        color: #0E1E1A;
         margin: 0 0 0.3rem 0;
         line-height: 1.35;
     }
     .nv-job-title a {
-        color: var(--nv-text);
+        color: #0E1E1A;
         text-decoration: none;
     }
     .nv-job-title a:hover {
-        color: var(--nv-primary);
+        color: #0F4C3A;
     }
     .nv-job-meta {
         color: #424245;
@@ -295,11 +295,11 @@ st.markdown(
         line-height: 1.45;
     }
     .nv-job-meta strong {
-        color: var(--nv-text);
+        color: #0E1E1A;
         font-weight: 600;
     }
     .nv-job-meta .nv-source {
-        color: var(--nv-text-3);
+        color: #8B958F;
         font-size: 0.85rem;
         margin-left: 0.5rem;
     }
@@ -312,11 +312,11 @@ st.markdown(
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: var(--nv-card);
+        background: #FFFFFF;
         border-right: 1px solid #E5E5E7;
     }
     [data-testid="stSidebar"] h2 {
-        color: var(--nv-text);
+        color: #0E1E1A;
         font-size: 1.15rem;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -325,7 +325,7 @@ st.markdown(
         margin-bottom: 0.5rem;
     }
     [data-testid="stSidebar"] label {
-        color: var(--nv-text);
+        color: #0E1E1A;
         font-weight: 500;
         font-size: 0.95rem;
     }
@@ -333,14 +333,14 @@ st.markdown(
     /* Multiselect tags / pillen — neutraal Apple-grijs i.p.v. donker bruin */
     [data-baseweb="tag"] {
         background-color: #E8E8ED !important;
-        color: var(--nv-text) !important;
+        color: #0E1E1A !important;
         border-radius: 6px !important;
         border: none !important;
         font-weight: 500 !important;
     }
     [data-baseweb="tag"] svg {
-        color: var(--nv-text-3) !important;
-        fill: var(--nv-text-3) !important;
+        color: #8B958F !important;
+        fill: #8B958F !important;
     }
     [data-baseweb="tag"]:hover {
         background-color: #DCDCE0 !important;
@@ -350,36 +350,36 @@ st.markdown(
     [data-baseweb="select"] > div,
     .stTextInput input,
     .stTextArea textarea {
-        background: var(--nv-card) !important;
+        background: #FFFFFF !important;
         border-radius: 8px !important;
-        border-color: var(--nv-border) !important;
+        border-color: #E8E6DF !important;
     }
 
     /* Buttons */
     .stButton button {
         background: #FFFFFF;
-        border: 1px solid var(--nv-border);
-        color: var(--nv-text);
+        border: 1px solid #E8E6DF;
+        color: #0E1E1A;
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.15s ease;
     }
     .stButton button:hover {
-        background: var(--nv-card);
+        background: #FFFFFF;
         border-color: #B0B0B5;
     }
     .stButton button[kind="primary"], .stFormSubmitButton button {
-        background: var(--nv-primary);
+        background: #0F4C3A;
         color: #FFFFFF;
         border: none;
     }
     .stButton button[kind="primary"]:hover, .stFormSubmitButton button:hover {
-        background: var(--nv-primary-hover);
+        background: #0A3A2C;
     }
 
     /* Captions kleiner en grijzer */
     .stCaption, [data-testid="stCaptionContainer"] {
-        color: var(--nv-text-3);
+        color: #8B958F;
         font-size: 0.88rem;
     }
 
@@ -401,8 +401,8 @@ st.markdown(
 
     /* Klikbare metric-tegels bovenaan — zen vibe */
     .nv-metric-tile button {
-        background: var(--nv-card) !important;
-        border: 1px solid var(--nv-border) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E8E6DF !important;
         border-radius: 16px !important;
         padding: 1.05rem 1.25rem !important;
         height: auto !important;
@@ -411,27 +411,27 @@ st.markdown(
         white-space: pre-line !important;
         font-weight: 600 !important;
         line-height: 1.35 !important;
-        color: var(--nv-text) !important;
+        color: #0E1E1A !important;
         transition: all 0.18s ease;
     }
     .nv-metric-tile button:hover {
-        background: var(--nv-card) !important;
-        border-color: var(--nv-primary) !important;
+        background: #FFFFFF !important;
+        border-color: #0F4C3A !important;
         transform: translateY(-1px);
     }
     .nv-metric-tile-active button {
-        background: var(--nv-primary) !important;
-        border-color: var(--nv-primary) !important;
+        background: #0F4C3A !important;
+        border-color: #0F4C3A !important;
         color: #FFFFFF !important;
         box-shadow: 0 4px 16px rgba(15, 76, 58, 0.22) !important;
     }
     .nv-metric-tile-active button:hover {
-        background: var(--nv-primary-hover) !important;
+        background: #0A3A2C !important;
         color: #FFFFFF !important;
     }
     .nv-metric-tile button p {
         font-size: 0.78rem !important;
-        color: var(--nv-text-3) !important;
+        color: #8B958F !important;
         margin: 0 0 0.35rem 0 !important;
         font-weight: 500 !important;
         text-transform: uppercase !important;
