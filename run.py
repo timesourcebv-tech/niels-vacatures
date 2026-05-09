@@ -16,6 +16,7 @@ from scoring import score_job
 from scrapers import (
     scrape_adzuna,
     scrape_bouwjobs,
+    scrape_company_pages,
     scrape_glassdoor,
     scrape_jobbird,
     scrape_jooble,
@@ -126,6 +127,14 @@ def run_once(include_belgium: bool = False) -> dict:
                 all_jobs.extend(jobs)
             except Exception as e:
                 log.exception("Glassdoor '%s' (%s) failed: %s", q, loc, e)
+
+    # Company-pages — directe werken-bij van top hout/bouw-bedrijven (1x per run)
+    try:
+        jobs = scrape_company_pages()
+        _score(jobs)
+        all_jobs.extend(jobs)
+    except Exception as e:
+        log.exception("Company-pages failed: %s", e)
 
     log.info("Totaal opgehaald: %d", len(all_jobs))
 
