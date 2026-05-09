@@ -96,7 +96,16 @@ INDUSTRY_KEYWORDS = [
     "houttoeleverancier", "houtleverancier", "houtveredeling",
     "houtskeletbouw", "houtland", "houtfabriek", "houtproductie",
     "houtdistributie", "houtgroothandel", "houtdetailhandel",
-    "houtbedrijf", "houtmarkt",
+    "houtbedrijf", "houtmarkt", "houtbouw", "houtcomposiet",
+    # Hout-engineered producten
+    "lijmhout", "kruislaaghout", "i-balk", "i-balken", "lvl", "clt",
+    # Zagerijen en houtbewerkingsbedrijven
+    "zagerij", "zagerijen", "rondhoutzagerij",
+    # Timmerbedrijven
+    "timmerbedrijf", "timmerfabriek", "timmerwerkplaats",
+    # Trappenindustrie
+    "trappenindustrie", "trappenmaker", "trappenfabriek",
+    "trappenbouw", "trappenmakerij",
     # Houtsoorten (uit CV)
     "naaldhout", "hardhout", "vuren", "grenen", "douglas",
     "douglashout", "vurenhout", "grenenhout", "eikenhout",
@@ -119,6 +128,12 @@ INDUSTRY_KEYWORDS = [
     "woningbouw", "utiliteitsbouw", "infrabouw",
     "nieuwbouw", "renovatie", "verbouw",
     "prefab", "prefabricage", "prefabbouw",
+    "infrastructuur", "infra ",
+    # Bouwsubdisciplines (commercieel relevant)
+    "betonbouw", "betonindustrie", "metaalbouw", "staalbouw",
+    "dakdekker", "dakwerken", "dakwerkers",
+    "steenfabriek", "steenindustrie",
+    "beglazing", "glasindustrie",
     # Meubelindustrie / interieurbouw (hout-gebruikers)
     "meubelindustrie", "meubelmaker", "meubelfabrikant",
     "meubelproductie", "interieurbouw", "interieurmaker",
