@@ -46,11 +46,6 @@ STATUS_OPTIONS = list(STATUS_LABELS.keys())
 # Login-gate via Streamlit secrets (username + wachtwoord)
 # Username wordt onthouden in een cookie (90 dagen).
 # ──────────────────────────────────────────────────────────
-@st.cache_resource
-def _cookie_manager() -> stx.CookieManager:
-    return stx.CookieManager(key="niels_vac_cookies")
-
-
 def login_gate() -> bool:
     try:
         user_required = st.secrets.get("APP_USERNAME", "")
@@ -62,7 +57,7 @@ def login_gate() -> bool:
     if st.session_state.get("authed"):
         return True
 
-    cookies = _cookie_manager()
+    cookies = stx.CookieManager(key="niels_vac_cookies")
     saved_user = cookies.get("niels_username") or ""
 
     st.title("🪵 Vacatures voor Niels")
