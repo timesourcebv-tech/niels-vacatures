@@ -169,6 +169,13 @@ else:
         "score_low_bg":  "#F2F2F7", "score_low_fg":  "#6E6E73",
     }
 
+st.markdown(
+    """<div style="background:#FF0000;color:#FFFFFF;padding:1rem;text-align:center;font-size:1.3rem;font-weight:bold;border-radius:8px;margin-bottom:1rem;">
+🔴 CSS-INJECTIE TEST — als je dit ziet, werkt custom CSS
+    </div>""",
+    unsafe_allow_html=True,
+)
+
 # zen.com-geïnspireerde styling — forest-groen primair, lime accent
 st.markdown(
     """
