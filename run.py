@@ -16,6 +16,7 @@ from scoring import score_job
 from scrapers import (
     scrape_adzuna,
     scrape_bouwjobs,
+    scrape_glassdoor,
     scrape_jobbird,
     scrape_jooble,
     scrape_linkedin,
@@ -112,6 +113,19 @@ def run_once(include_belgium: bool = False) -> dict:
                 all_jobs.extend(jobs)
             except Exception as e:
                 log.exception("Jooble '%s' (%s) failed: %s", q, loc, e)
+
+    # Glassdoor — NL + BE
+    glassdoor_locs = ["nederland"]
+    if include_belgium:
+        glassdoor_locs.append("vlaanderen")
+    for loc in glassdoor_locs:
+        for q in BROAD_QUERIES:
+            try:
+                jobs = scrape_glassdoor(q, location=loc, max_results=MAX_RESULTS_PER_QUERY)
+                _score(jobs)
+                all_jobs.extend(jobs)
+            except Exception as e:
+                log.exception("Glassdoor '%s' (%s) failed: %s", q, loc, e)
 
     log.info("Totaal opgehaald: %d", len(all_jobs))
 

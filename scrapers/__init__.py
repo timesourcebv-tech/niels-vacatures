@@ -18,6 +18,7 @@ from .jobbird import scrape_jobbird
 from .stepstone import scrape_stepstone
 from .adzuna import scrape_adzuna
 from .jooble import scrape_jooble
+from .glassdoor import scrape_glassdoor
 
 ALL_SCRAPERS = [
     ("linkedin", scrape_linkedin),
@@ -26,4 +27,5 @@ ALL_SCRAPERS = [
     ("stepstone", scrape_stepstone),
     ("adzuna", scrape_adzuna),
     ("jooble", scrape_jooble),
+    ("glassdoor", scrape_glassdoor),
 ]
