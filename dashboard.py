@@ -97,7 +97,6 @@ def header() -> None:
 def sidebar_filters() -> tuple[int, list[str], str, list[str], str]:
     with st.sidebar:
         st.header("Filters")
-        min_score = st.slider("Minimale match-score", 0, 100, 50, step=5)
         statuses = st.multiselect(
             "Status",
             options=STATUS_OPTIONS,
@@ -106,6 +105,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], str]:
         )
 
         region = st.selectbox("Regio", list(REGIONS.keys()), index=0)
+        min_score = 0
 
         with get_conn() as conn:
             sources_rows = conn.execute("SELECT DISTINCT source FROM jobs").fetchall()
@@ -223,6 +223,7 @@ def main() -> None:
         "Sorteer op",
         ["Match-score", "Datum gevonden"],
         horizontal=True,
+        index=0,
         label_visibility="collapsed",
     )
     if sort_by == "Datum gevonden":
@@ -231,6 +232,7 @@ def main() -> None:
         df = df.sort_values(["score", "discovered_at"], ascending=[False, False])
 
     st.subheader(f"{len(df)} vacature(s)")
+    st.caption("Gesorteerd op match-score, hoogste eerst.")
 
     for _, row in df.iterrows():
         render_job_card(row)
