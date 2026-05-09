@@ -143,15 +143,19 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], str, bool]:
 
 
 def render_job_card(row: pd.Series) -> None:
-    status = row["status"]
+    raw_status = row["status"]
+    status = raw_status if raw_status in STATUS_OPTIONS else "new"
     score = int(row["score"])
     title = row["title"]
     company = row["company"] or "Onbekend"
     location = row["location"] or "—"
     posted = str(row.get("posted_at") or row.get("discovered_at") or "")[:10]
     source = row["source"]
+    is_fav = bool(row.get("favorite"))
 
     score_emoji = "🟢" if score >= 70 else ("🟡" if score >= 50 else "⚪")
+    fav_icon = "🪵❤️" if is_fav else "🤍"
+    fav_help = "Verwijder uit favorieten" if is_fav else "Voeg toe aan favorieten"
 
     with st.container(border=True):
         c1, c2 = st.columns([5, 2])
@@ -165,40 +169,33 @@ def render_job_card(row: pd.Series) -> None:
             desc_raw = row.get("description")
             if desc_raw:
                 desc = str(desc_raw).strip()
-                # Toon eerste ~280 chars als compacte samenvatting onder bedrijfsregel
                 short = desc if len(desc) <= 280 else desc[:277].rsplit(" ", 1)[0] + "…"
                 st.markdown(
                     f"<div style='color:#5B4A36;font-size:0.92rem;margin:0.3rem 0;'>{short}</div>",
                     unsafe_allow_html=True,
                 )
-                # Volledige beschrijving als die langer is
                 if len(desc) > 280:
                     with st.expander("Volledige beschrijving"):
                         st.write(desc)
-            if row.get("notes"):
-                st.info(f"📝 {row['notes']}")
         with c2:
-            st.metric("Match", f"{score}/100")
+            top_l, top_r = st.columns([1, 2])
+            with top_l:
+                if st.button(fav_icon, key=f"fav_{row['id']}", help=fav_help):
+                    toggle_favorite(int(row["id"]))
+                    st.rerun()
+            with top_r:
+                st.metric("Match", f"{score}/100", label_visibility="collapsed")
             new_status = st.selectbox(
                 "Status",
                 STATUS_OPTIONS,
-                index=STATUS_OPTIONS.index(status) if status in STATUS_OPTIONS else 0,
+                index=STATUS_OPTIONS.index(status),
                 format_func=lambda s: STATUS_LABELS[s],
                 key=f"status_{row['id']}",
                 label_visibility="collapsed",
             )
-            notes = st.text_input(
-                "Notitie",
-                value=row.get("notes") or "",
-                key=f"notes_{row['id']}",
-                placeholder="Notitie...",
-                label_visibility="collapsed",
-            )
-            current_notes = row.get("notes") or ""
-            if new_status != status or notes != current_notes:
-                if st.button("Opslaan", key=f"save_{row['id']}"):
-                    update_status(int(row["id"]), new_status, notes or None)
-                    st.rerun()
+            if new_status != status:
+                update_status(int(row["id"]), new_status, None)
+                st.rerun()
 
 
 def main() -> None:
