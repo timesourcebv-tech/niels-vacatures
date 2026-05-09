@@ -21,52 +21,49 @@ from .base import http_get
 
 log = logging.getLogger(__name__)
 
-# Curated lijst — NL hout & bouwmateriaal-bedrijven met career-pagina's.
-# (URL gokwerk per bedrijf; scraper faalt graceful als URL niet bestaat.)
+# Curated lijst — NL/BE hout & bouwmateriaal-bedrijven met
+# automatisch geverifieerde career-URL's (zie discover_careers.py).
 COMPANY_CAREERS: list[tuple[str, str]] = [
-    # Hout-importeurs & -groothandel
-    ("Jongeneel", "https://www.jongeneel.nl/werken-bij"),
-    ("Pontmeyer", "https://www.pontmeyer.nl/werken-bij-pontmeyer"),
-    ("Stiho", "https://werkenbij.stiho.nl/vacatures"),
-    ("Bouwmaat", "https://www.bouwmaat.nl/werken-bij"),
-    ("Boogaerdt Hout", "https://www.boogaerdt.nl/vacatures"),
-    ("Wilbrink", "https://www.wilbrink.nl/vacatures"),
-    ("Van de Stadt Houtimport", "https://www.vandestadt.nl/vacatures"),
-    ("JenoWood", "https://www.jenowood.nl/vacatures"),
-    ("Heuvelman Hout", "https://www.heuvelmanhout.nl/vacatures"),
-    ("Houthandel van Aalst", "https://www.vanaalst.nl/vacatures"),
-    ("Wijma", "https://www.wijma.com/nl/vacatures"),
-    ("Houtland", "https://www.houtland.com/nl/vacatures"),
+    # NL Houthandel / hout-import
+    ("Stiho", "https://www.stiho.nl/werken-bij"),
+    ("Bouwmaat", "https://www.bouwmaat.nl/vacatures"),
+    ("Centrop Houtimport", "https://www.centrop.nl/vacatures"),
     ("Verwol", "https://www.verwol.nl/vacatures"),
-    ("Carpentier", "https://www.carpentier.be/nl/vacatures"),
-    ("Decospan", "https://www.decospan.com/nl/vacatures"),
-
-    # Bouwmaterialen-grossiers
-    ("BMN", "https://www.bmn.nl/werken-bij"),
-    ("Raab Karcher", "https://www.raabkarcher.nl/werken-bij"),
-    ("Bouwcenter", "https://www.bouwcenter.nl/werken-bij"),
-    ("Heuts Bouwmaterialen", "https://www.heuts.nl/vacatures"),
-    ("Linthorst Bouwmaterialen", "https://www.linthorstbouwmaterialen.nl/vacatures"),
-
-    # Plaatmateriaal & panelen
-    ("Trespa", "https://www.trespa.com/nl/over-trespa/vacatures"),
-    ("Rockpanel", "https://www.rockpanel.nl/over-ons/vacatures"),
-    ("Spano", "https://www.spano.be/nl/jobs"),
-
-    # Deuren, kozijnen, gevel
-    ("Berkvens", "https://www.berkvens.nl/werken-bij"),
-    ("Skantrae", "https://www.skantrae.nl/werken-bij"),
-    ("Weekamp Deuren", "https://www.weekampdeuren.nl/werken-bij"),
-    ("Bruynzeel Deuren", "https://www.bruynzeel.com/nl/werken-bij"),
-    ("Reynaers", "https://www.reynaers.nl/nl/over-reynaers/vacatures"),
-
-    # Bouwmateriaal-fabrikanten
-    ("Wienerberger", "https://www.wienerberger.nl/werken-bij"),
-    ("Rockwool", "https://www.rockwool.com/nl/over-ons/werken-bij/vacatures"),
+    # NL Bouwmaterialen-grossiers
+    ("BMN", "https://www.bmn.nl/vacatures"),
+    ("Bouwcenter", "https://www.bouwcenter.nl/vacatures"),
+    ("CB Bouwmaterialen", "https://www.cb.nl/werken-bij"),
+    # NL Deuren / kozijnen / fabrikanten
+    ("Berkvens", "https://www.berkvens.nl/vacatures"),
+    ("Theuma", "https://www.theuma.com/jobs"),
+    ("Rockwool", "https://www.rockwool.com/jobs"),
     ("Knauf", "https://www.knauf.nl/werken-bij"),
-    ("Saint-Gobain", "https://www.saint-gobain.nl/werken-bij"),
-    ("Etex", "https://www.etexgroup.com/nl-nl/careers"),
-    ("Royal Mosa", "https://www.mosa.com/nl/over-mosa/werken-bij"),
+    ("Etex", "https://www.etexgroup.com/careers"),
+    # NL Bouwmarkten / DHZ
+    ("Praxis", "https://www.praxis.nl/vacatures"),
+    ("Storax", "https://www.storax.nl/werken-bij"),
+    # BE / Vlaanderen — houthandel / plaat
+    ("Carpentier", "https://www.carpentier.be/vacatures"),
+    ("Decospan", "https://www.decospan.com/nl/jobs"),
+    ("Norbord", "https://www.norbord.com/jobs"),
+    ("Cras Woodgroup", "https://www.cras.be/jobs"),
+    ("Houthandel Vyncke", "https://www.vyncke.com/career"),
+    # BE Bouwmaterialen / sanitair / bouw
+    ("Lecot", "https://www.lecot.be/vacatures"),
+    ("Facq", "https://www.facq.be/jobs"),
+    ("Desco", "https://www.desco.be/over-ons/werken-bij"),
+    ("Bostoen", "https://www.bostoen.be/vacatures"),
+    ("Devolder", "https://www.devolder.be/jobs"),
+    ("Hubo", "https://www.hubo.be/vacatures"),
+    # BE Fabrikanten — gevel / kozijnen
+    ("Wienerberger Belgium", "https://www.wienerberger.be/jobs"),
+    ("Knauf Belgium", "https://www.knauf.be/werken-bij"),
+    ("Reynaers Aluminium", "https://www.reynaers.be/jobs"),
+    ("Aliplast", "https://www.aliplast.com/werken-bij"),
+    ("Deceuninck", "https://www.deceuninck.com/jobs"),
+    ("Beaulieu International", "https://www.bintg.com/werken-bij"),
+    # BE Bouwbedrijven
+    ("Cordeel", "https://cordeel.eu/werken-bij"),
 ]
 
 
