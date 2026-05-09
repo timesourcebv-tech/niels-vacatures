@@ -368,16 +368,30 @@ QUERIES = [
 # Deze sites filteren minder strict op zoekwoord, dus we gebruiken brede
 # branche-termen en laten scoring het uitsorteren.
 BROAD_QUERIES = [
+    # Hout algemeen
     "hout",
     "houthandel",
     "houtimport",
     "houtindustrie",
+    "houthandelaar",
+    "houtbewerking",
+    # Hout-soorten (uit Niels' CV)
     "naaldhout",
     "hardhout",
+    "douglashout",
+    "vurenhout",
+    "thermohout",
+    "verduurzaamd hout",
+    # Plaat / bouwmateriaal
     "plaatmateriaal",
     "bouwmaterialen",
+    "gevelbekleding",
+    # Hout-gerelateerde branches
     "houtskeletbouw",
     "timmerindustrie",
+    "trappenindustrie",
+    "zagerij",
+    "meubelindustrie",
 ]
 
 # ──────────────────────────────────────────────────────────
