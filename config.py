@@ -131,7 +131,7 @@ INDUSTRY_KEYWORDS = [
     "woningbouw", "utiliteitsbouw", "infrabouw",
     "nieuwbouw", "renovatie", "verbouw",
     "prefab", "prefabricage", "prefabbouw",
-    "infrastructuur", "infra ",
+    "infrastructuur",
     # Bouwsubdisciplines (commercieel relevant)
     "betonbouw", "betonindustrie", "metaalbouw", "staalbouw",
     "dakdekker", "dakwerken", "dakwerkers",
@@ -282,6 +282,11 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "automation", "automatisering", "automatisatie",
     "elektrotechniek", "aandrijftechniek", "mechatron",
     "siemens", "plc",
+    # Kwaliteit / Arbo / Milieu / Compliance / Safety
+    "kam-manager", "kam manager", "kam ",
+    "veiligheidsmanager", "safety manager",
+    "arbo", "milieumanager", "milieu manager",
+    "compliance", "audit",
     "productie",  # productieleider/productiemedewerker/teamlead productie
     # Retail / beauty / fashion (niet hout/bouw)
     "retail", "winkelketen", "winkelmanager",
