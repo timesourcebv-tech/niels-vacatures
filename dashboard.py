@@ -370,6 +370,37 @@ st.markdown(
     }
     .nv-fav-btn button:hover { transform: scale(1.15); background: transparent !important; }
     .nv-fav-btn button:focus { outline: none !important; box-shadow: none !important; }
+
+    /* Klikbare metric-tegels bovenaan */
+    .nv-metric-tile button {
+        background: #F5F5F7 !important;
+        border: 1px solid transparent !important;
+        border-radius: 12px !important;
+        padding: 1rem 1.2rem !important;
+        height: auto !important;
+        min-height: 5.5rem !important;
+        text-align: left !important;
+        white-space: pre-line !important;
+        font-weight: 500 !important;
+        line-height: 1.35 !important;
+        color: #1D1D1F !important;
+        transition: all 0.15s ease;
+    }
+    .nv-metric-tile button:hover {
+        background: #ECECF0 !important;
+        border-color: #D2D2D7 !important;
+    }
+    .nv-metric-tile-active button {
+        background: #FFFFFF !important;
+        border-color: #0071E3 !important;
+        box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15) !important;
+    }
+    .nv-metric-tile button p {
+        font-size: 0.82rem !important;
+        color: #6E6E73 !important;
+        margin: 0 0 0.3rem 0 !important;
+        font-weight: 500 !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -552,12 +583,31 @@ def header() -> None:
     )
 
     s = stats()
+    if "active_view" not in st.session_state:
+        st.session_state["active_view"] = "all"
+    active = st.session_state["active_view"]
+
+    tiles = [
+        ("all", "Vacatures", s.get("total") or 0),
+        ("new", "Nieuw", s.get("new_count") or 0),
+        ("fav", "Favorieten", s.get("favorite_count") or 0),
+        ("applied", "Gesolliciteerd", s.get("applied_count") or 0),
+        ("rejected", "Afgewezen", s.get("rejected_count") or 0),
+    ]
     cols = st.columns(5)
-    cols[0].metric("Vacatures", s.get("total") or 0)
-    cols[1].metric("Nieuw", s.get("new_count") or 0)
-    cols[2].metric("Favorieten", s.get("favorite_count") or 0)
-    cols[3].metric("Gesolliciteerd", s.get("applied_count") or 0)
-    cols[4].metric("Afgewezen", s.get("rejected_count") or 0)
+    for col, (key, label, value) in zip(cols, tiles):
+        with col:
+            active_cls = "nv-metric-tile-active" if active == key else ""
+            st.markdown(f'<div class="nv-metric-tile {active_cls}">', unsafe_allow_html=True)
+            if st.button(
+                f"{label}\n{value}",
+                key=f"tile_{key}",
+                use_container_width=True,
+            ):
+                st.session_state["active_view"] = key
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+
     last_run = (s.get("last_run") or "—")[:16].replace("T", " ")
     st.caption(f"Laatst bijgewerkt: {last_run}")
 
@@ -575,13 +625,22 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
             st.rerun()
         st.divider()
         st.header("Filters")
-        statuses = st.multiselect(
-            "Status",
-            options=STATUS_OPTIONS,
-            default=["new"],
-            format_func=lambda x: STATUS_LABELS[x],
-        )
-        favorites_only = st.checkbox("Alleen favorieten", value=False)
+
+        # Status & favorieten worden via de tegels bovenaan bestuurd.
+        active = st.session_state.get("active_view", "all")
+        if active == "all":
+            statuses, favorites_only = STATUS_OPTIONS, False
+        elif active == "new":
+            statuses, favorites_only = ["new"], False
+        elif active == "fav":
+            statuses, favorites_only = STATUS_OPTIONS, True
+        elif active == "applied":
+            statuses, favorites_only = ["applied"], False
+        elif active == "rejected":
+            statuses, favorites_only = ["rejected"], False
+        else:
+            statuses, favorites_only = STATUS_OPTIONS, False
+
         min_score = 0
 
         # Provincies — checkbox-grid in expander
