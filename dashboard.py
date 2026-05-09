@@ -111,9 +111,36 @@ st.set_page_config(
     layout="wide",
 )
 
+# Theme toggle — moet vóór CSS-injectie zodat de juiste tinten worden geladen
+if "dark_mode" not in st.session_state:
+    st.session_state["dark_mode"] = False
+DARK = st.session_state["dark_mode"]
+
+# Kleurpalet — wisselt tussen licht en donker
+if DARK:
+    C = {
+        "bg": "#1C1C1E", "bg_alt": "#2C2C2E", "card": "#2C2C2E",
+        "border": "#38383A", "text": "#F5F5F7", "text_2": "#98989D",
+        "text_3": "#636366", "tag_bg": "#3A3A3C", "tag_text": "#F5F5F7",
+        "tag_close": "#98989D", "input_bg": "#2C2C2E",
+        "score_high_bg": "#1B3A1F", "score_high_fg": "#A4D4A8",
+        "score_mid_bg":  "#3D2E0F", "score_mid_fg":  "#F0C97A",
+        "score_low_bg":  "#2C2C2E", "score_low_fg":  "#98989D",
+    }
+else:
+    C = {
+        "bg": "#FFFFFF", "bg_alt": "#F5F5F7", "card": "#FFFFFF",
+        "border": "#E5E5E7", "text": "#1D1D1F", "text_2": "#424245",
+        "text_3": "#86868B", "tag_bg": "#E8E8ED", "tag_text": "#1D1D1F",
+        "tag_close": "#6E6E73", "input_bg": "#FFFFFF",
+        "score_high_bg": "#E8F5E9", "score_high_fg": "#1B5E20",
+        "score_mid_bg":  "#FFF3E0", "score_mid_fg":  "#B26A00",
+        "score_low_bg":  "#F2F2F7", "score_low_fg":  "#6E6E73",
+    }
+
 # Apple-geïnspireerde styling — clean, leesbaar, ruimtelijk
 st.markdown(
-    """
+    f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -405,6 +432,16 @@ def header() -> None:
 
 def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
     with st.sidebar:
+        # Theme-toggle bovenaan
+        new_dark = st.toggle(
+            "Donker thema",
+            value=st.session_state.get("dark_mode", False),
+            key="dark_toggle",
+        )
+        if new_dark != st.session_state.get("dark_mode", False):
+            st.session_state["dark_mode"] = new_dark
+            st.rerun()
+        st.divider()
         st.header("Filters")
         statuses = st.multiselect(
             "Status",

@@ -212,8 +212,13 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "uitzendbedrijf", "uitzendbureau",
     "leerling", "stagiair", "trainee", "bijbaan",
     "orderpicker", "expediteur", "machinist", "machinebediener",
-    "horeca", "restaurant", "kapper",
+    "horeca", "restaurant", "kapper", "kapsalon", "haarstylist",
     "productie",  # productieleider/productiemedewerker/teamlead productie
+    # Retail / beauty / fashion (niet hout/bouw)
+    "retail", "winkelketen", "winkelmanager",
+    "beauty", "cosmetica", "parfumerie", "drogisterij",
+    "fashion", "mode-", "modemerk", "kleding", "schoenen",
+    "supermarkt", "buurtsuper",
 ]
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
