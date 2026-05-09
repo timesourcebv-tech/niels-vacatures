@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from config import CITIES_BE_NL, CITIES_NEAR, CITIES_RANDSTAD, NIELS_PROFILE
-from db import fetch_jobs, get_conn, stats, update_status
+from db import fetch_jobs, get_conn, stats, toggle_favorite, update_status
 
 REGIONS = {
     "Alles": None,
@@ -35,7 +35,6 @@ st.set_page_config(
 
 STATUS_LABELS = {
     "new": "Nieuw",
-    "interesting": "Interessant",
     "applied": "Gesolliciteerd",
     "rejected": "Afgewezen",
 }
@@ -99,22 +98,23 @@ def header() -> None:
     cols = st.columns(5)
     cols[0].metric("Totaal", s.get("total") or 0)
     cols[1].metric("Nieuw", s.get("new_count") or 0)
-    cols[2].metric("Interessant", s.get("interesting_count") or 0)
+    cols[2].metric("🪵 Favorieten", s.get("favorite_count") or 0)
     cols[3].metric("Gesolliciteerd", s.get("applied_count") or 0)
     cols[4].metric("Afgewezen", s.get("rejected_count") or 0)
     last_run = (s.get("last_run") or "—")[:16].replace("T", " ")
     st.caption(f"Laatst bijgewerkt: {last_run}")
 
 
-def sidebar_filters() -> tuple[int, list[str], str, list[str], str]:
+def sidebar_filters() -> tuple[int, list[str], str, list[str], str, bool]:
     with st.sidebar:
         st.header("Filters")
         statuses = st.multiselect(
             "Status",
             options=STATUS_OPTIONS,
-            default=["new", "interesting"],
+            default=["new"],
             format_func=lambda x: STATUS_LABELS[x],
         )
+        favorites_only = st.checkbox("🪵 Alleen favorieten", value=False)
 
         region = st.selectbox("Regio", list(REGIONS.keys()), index=0)
         min_score = 0
@@ -139,7 +139,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], str]:
             "uitgevoerd. Druk niet handmatig op refresh — kom morgen weer kijken "
             "voor nieuwe vacatures."
         )
-    return min_score, statuses, search, sources, region
+    return min_score, statuses, search, sources, region, favorites_only
 
 
 def render_job_card(row: pd.Series) -> None:
@@ -206,7 +206,7 @@ def main() -> None:
         return
 
     header()
-    min_score, statuses, search, sources, region = sidebar_filters()
+    min_score, statuses, search, sources, region, favorites_only = sidebar_filters()
 
     if not statuses:
         st.info("Selecteer minstens één status in de sidebar.")
@@ -220,6 +220,8 @@ def main() -> None:
         )
         return
 
+    if favorites_only:
+        df = df[df["favorite"].fillna(0).astype(int) == 1]
     if sources:
         df = df[df["source"].isin(sources)]
     region_terms = REGIONS.get(region)

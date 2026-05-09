@@ -23,13 +23,22 @@ CREATE TABLE IF NOT EXISTS jobs (
     score INTEGER DEFAULT 0,
     status TEXT DEFAULT 'new',
     notes TEXT,
+    favorite INTEGER DEFAULT 0,
     UNIQUE(source, source_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_jobs_score ON jobs(score DESC);
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
 CREATE INDEX IF NOT EXISTS idx_jobs_discovered ON jobs(discovered_at DESC);
+CREATE INDEX IF NOT EXISTS idx_jobs_favorite ON jobs(favorite);
 """
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Voeg ontbrekende kolommen toe aan bestaande databases."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(jobs)").fetchall()}
+    if "favorite" not in cols:
+        conn.execute("ALTER TABLE jobs ADD COLUMN favorite INTEGER DEFAULT 0")
 
 
 def get_conn() -> sqlite3.Connection:
@@ -37,6 +46,7 @@ def get_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    _migrate(conn)
     return conn
 
 
@@ -89,6 +99,15 @@ def update_status(job_id: int, status: str, notes: str | None = None) -> None:
             conn.execute("UPDATE jobs SET status = ? WHERE id = ?", (status, job_id))
 
 
+def toggle_favorite(job_id: int) -> int:
+    """Toggle favorite, retourneert nieuwe waarde (0 of 1)."""
+    with get_conn() as conn:
+        row = conn.execute("SELECT favorite FROM jobs WHERE id = ?", (job_id,)).fetchone()
+        new_val = 0 if (row and row["favorite"]) else 1
+        conn.execute("UPDATE jobs SET favorite = ? WHERE id = ?", (new_val, job_id))
+        return new_val
+
+
 def fetch_jobs(
     min_score: int = 0,
     statuses: list[str] | None = None,
@@ -113,7 +132,7 @@ def stats() -> dict:
             SELECT
                 COUNT(*) AS total,
                 SUM(CASE WHEN status='new' THEN 1 ELSE 0 END) AS new_count,
-                SUM(CASE WHEN status='interesting' THEN 1 ELSE 0 END) AS interesting_count,
+                SUM(CASE WHEN favorite=1 THEN 1 ELSE 0 END) AS favorite_count,
                 SUM(CASE WHEN status='applied' THEN 1 ELSE 0 END) AS applied_count,
                 SUM(CASE WHEN status='rejected' THEN 1 ELSE 0 END) AS rejected_count,
                 MAX(discovered_at) AS last_run
