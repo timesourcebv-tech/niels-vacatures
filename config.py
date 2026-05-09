@@ -303,9 +303,26 @@ POSITIVE_BOOST = [
 ]
 
 NEGATIVE_TERMS = [
+    # Niveau te laag / niet senior genoeg
     "junior", "medior", "stagiair", "stage ", " stage", "intern ",
     "trainee", "starter", "bijbaan", "parttime student",
     "studentenbaan", "zaterdaghulp",
+    # Operationele / logistieke rollen (geen senior commerciële of management rol)
+    "magazijnmedewerker", "magazijnhulp", "magazijnier",
+    "chauffeur", "heftruckchauffeur", "vrachtwagenchauffeur",
+    "kraanchauffeur", "kraanmachinist",
+    "orderpicker", "expediteur", "expeditiemedewerker",
+    "logistiek medewerker", "logistiekmedewerker",
+    # Winkel- / baliepersoneel
+    "baliemedewerker", "balieverkoper",
+    "verkoopmedewerker", "winkelmedewerker",
+    # Productie / montage / vakvaardig
+    "productiemedewerker", "productiehulp",
+    "montagemedewerker", "monteur",
+    "machinebediener", "machinaal houtbewerker", "houtbewerker",
+    "timmerman", "werkplaatstimmerman", "schrijnwerker",
+    "elektricien", "schilder", "loodgieter",
+    "bouwvakker", "metselaar",
 ]
 
 # Locatie-negatief: niet-Nederlandstalig deel BE en buitenland behalve toegestane
