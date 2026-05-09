@@ -79,6 +79,8 @@ LEADERSHIP_TERMS = [
     "operations manager", "sales director", "salesdirecteur",
     "managing director", "algemeen directeur", "regiomanager",
     "regio manager", "head of", "hoofd ",
+    "manager",  # losstaande "Manager" in titel telt als leadership
+    "director", "lead", "chief",
 ]
 
 # ──────────────────────────────────────────────────────────

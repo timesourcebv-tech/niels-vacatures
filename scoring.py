@@ -69,7 +69,7 @@ def score_job(
         if re.search(r"\b" + re.escape(term) + r"\b", t, re.IGNORECASE)
     )
     if high_value_matches:
-        score += min(high_value_matches * 7, 20)
+        score += min(high_value_matches * 10, 30)
 
     # Industrie / hout — woordgrenzen verplicht
     industry_in_title = _word_match(INDUSTRY_KEYWORDS, t)
@@ -120,9 +120,15 @@ def score_job(
     if any(neg in loc for neg in NEGATIVE_LOCATIONS_BE):
         score -= 30
 
-    # Cap op 35 als geen enkel hout/industrie-signaal — voorkomt false positives
-    # zonder hout-context (bv. "Operations Manager Amsterdam").
+    # Cap op 35 als geen enkel hout/industrie-signaal — voorkomt false positives.
+    # Verzacht als de titel sterk match maakt op Niels' doelrollen
+    # (Sales/Business/Developer/Manager combos).
     if not has_industry_signal:
-        score = min(score, 35)
+        if high_value_matches >= 3:
+            pass  # bv. "Senior Business Development Manager" — geen cap
+        elif high_value_matches >= 2:
+            score = min(score, 70)
+        else:
+            score = min(score, 35)
 
     return max(0, min(100, score))
