@@ -53,6 +53,15 @@ def score_job(
     if any(sub in t for sub in STRICT_NEGATIVE_TITLE_SUBSTRINGS):
         return 0
 
+    # Rol-niveau verplicht in titel: ROLE_KEYWORD of HIGH_VALUE term.
+    # Anders geen senior commerciële rol — uitsluiten.
+    has_role_signal = _word_match(ROLE_KEYWORDS, t) or any(
+        re.search(r"\b" + re.escape(term) + r"\b", t, re.IGNORECASE)
+        for term in HIGH_VALUE_TITLE_TERMS
+    )
+    if not has_role_signal:
+        return 0
+
     score = 0
 
     # Rol-niveau

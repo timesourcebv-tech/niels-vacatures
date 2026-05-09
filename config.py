@@ -275,6 +275,14 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "onderwijs", "school", "universiteit", "hogeschool",
     # Werving / staffing (Niels' rol is bij eindwerkgever, niet bij detachering)
     "werving en selectie", "wervingsbureau", "detachering",
+    # Te licht / niet senior commercieel
+    "bediende", "balie", "receptionist", "secretaresse",
+    "packer", "packing",
+    "assistent administr", "administratief",
+    # Technisch / R&D / engineering (geen commerciële rol)
+    "ingenieur", "engineer", "r&d", "research",
+    "innovator", "innovatie ingenieur",
+    "kwaliteits", "qhse", "lab ", "laborant",
 ]
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
