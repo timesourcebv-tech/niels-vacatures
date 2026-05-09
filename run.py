@@ -13,7 +13,14 @@ from config import BROAD_QUERIES, MAX_RESULTS_PER_QUERY, QUERIES
 from db import stats, upsert_jobs
 from enrichment import enrich_descriptions
 from scoring import score_job
-from scrapers import scrape_adzuna, scrape_bouwjobs, scrape_jobbird, scrape_linkedin, scrape_stepstone
+from scrapers import (
+    scrape_adzuna,
+    scrape_bouwjobs,
+    scrape_jobbird,
+    scrape_jooble,
+    scrape_linkedin,
+    scrape_stepstone,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -92,6 +99,19 @@ def run_once(include_belgium: bool = False) -> dict:
                 all_jobs.extend(jobs)
             except Exception as e:
                 log.exception("Adzuna '%s' (%s) failed: %s", q, loc, e)
+
+    # Jooble API — extra wereldwijde aggregator
+    jooble_locs = ["nederland"]
+    if include_belgium:
+        jooble_locs.append("vlaanderen")
+    for loc in jooble_locs:
+        for q in BROAD_QUERIES:
+            try:
+                jobs = scrape_jooble(q, location=loc, max_results=MAX_RESULTS_PER_QUERY)
+                _score(jobs)
+                all_jobs.extend(jobs)
+            except Exception as e:
+                log.exception("Jooble '%s' (%s) failed: %s", q, loc, e)
 
     log.info("Totaal opgehaald: %d", len(all_jobs))
 
