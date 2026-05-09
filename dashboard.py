@@ -111,149 +111,199 @@ st.set_page_config(
     layout="wide",
 )
 
-# Custom styling — ingetogen, hoogwaardig design met houtaccenten
+# Apple-geïnspireerde styling — clean, sans-serif, ruimtelijk
 st.markdown(
     """
     <style>
-    /* Globale typografie */
-    html, body, [class*="css"] {
-        font-family: 'Source Serif Pro', 'Georgia', 'Times New Roman', serif;
+    /* Globale typografie — Apple system fonts */
+    html, body, [class*="css"], .stApp, [data-testid="stSidebar"] {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
-    h1, h2, h3 {
-        font-family: 'Source Serif Pro', 'Georgia', serif;
-        letter-spacing: -0.01em;
-        color: #2A1810;
-    }
-    .stApp {
-        background: linear-gradient(180deg, #F4EFE7 0%, #EFE7D8 100%);
-    }
-
-    /* Header banner */
-    .nv-header {
-        background: linear-gradient(135deg, #3E2818 0%, #5C3A1E 100%);
-        color: #F4EFE7;
-        padding: 1.6rem 2rem;
-        border-radius: 4px;
-        margin: 0 0 1.5rem 0;
-        border-left: 5px solid #C9A063;
-        box-shadow: 0 2px 8px rgba(46, 24, 14, 0.15);
-    }
-    .nv-header h1 {
-        color: #F4EFE7;
-        font-size: 1.7rem;
-        margin: 0 0 0.25rem 0;
+    h1, h2, h3, h4 {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif !important;
+        letter-spacing: -0.022em;
+        color: #1D1D1F;
         font-weight: 600;
     }
+    .stApp {
+        background: #FFFFFF;
+    }
+
+    /* Header */
+    .nv-header {
+        padding: 2rem 0 1rem 0;
+        margin: 0 0 1.5rem 0;
+        border-bottom: 1px solid #E5E5E7;
+    }
+    .nv-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        color: #1D1D1F;
+        margin: 0 0 0.4rem 0;
+        line-height: 1.15;
+    }
     .nv-header .nv-subtitle {
-        color: #D4BFA0;
-        font-size: 0.95rem;
-        font-style: italic;
+        color: #6E6E73;
+        font-size: 1rem;
+        font-weight: 400;
         margin: 0;
     }
 
-    /* Metric cards */
+    /* Metrics */
+    [data-testid="stMetric"] {
+        background: #F5F5F7;
+        padding: 1rem 1.2rem;
+        border-radius: 12px;
+    }
     [data-testid="stMetricValue"] {
-        font-family: 'Source Serif Pro', Georgia, serif;
         font-weight: 600;
-        color: #3E2818;
+        color: #1D1D1F;
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
     }
     [data-testid="stMetricLabel"] {
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #6B5947;
+        font-size: 0.85rem;
+        color: #6E6E73;
+        font-weight: 500;
     }
 
     /* Vacature-cards */
     [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #FBF7EE;
-        border: 1px solid #D4C4A8 !important;
-        border-radius: 4px !important;
-        box-shadow: 0 1px 3px rgba(46, 24, 14, 0.06);
-        transition: box-shadow 0.15s ease;
+        background: #FFFFFF !important;
+        border: 1px solid #E5E5E7 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
     }
     [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
-        box-shadow: 0 3px 10px rgba(46, 24, 14, 0.12);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
 
     /* Score badge */
     .nv-score {
         display: inline-block;
-        padding: 0.32rem 0.7rem;
-        border-radius: 3px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        font-family: 'Source Serif Pro', Georgia, serif;
-        letter-spacing: 0.02em;
+        padding: 0.32rem 0.85rem;
+        border-radius: 980px;
+        font-weight: 600;
+        font-size: 0.82rem;
+        letter-spacing: -0.01em;
         white-space: nowrap;
     }
-    .nv-score-high { background: #2D5016; color: #F4EFE7; }
-    .nv-score-mid  { background: #B8860B; color: #FBF7EE; }
-    .nv-score-low  { background: #8C7560; color: #FBF7EE; }
+    .nv-score-high { background: #E8F5E9; color: #1B5E20; }
+    .nv-score-mid  { background: #FFF3E0; color: #B26A00; }
+    .nv-score-low  { background: #F2F2F7; color: #6E6E73; }
 
     /* Vacature-titel */
     .nv-job-title {
-        font-size: 1.18rem;
+        font-size: 1.15rem;
         font-weight: 600;
-        color: #2A1810;
-        margin: 0 0 0.2rem 0;
+        color: #1D1D1F;
+        margin: 0 0 0.25rem 0;
         line-height: 1.3;
+        letter-spacing: -0.015em;
     }
     .nv-job-title a {
-        color: #2A1810;
+        color: #1D1D1F;
         text-decoration: none;
-        border-bottom: 1px solid #C9A063;
     }
     .nv-job-title a:hover {
-        color: #5C3A1E;
-        border-bottom-color: #5C3A1E;
+        color: #0071E3;
     }
     .nv-job-meta {
-        color: #4A382A;
-        font-size: 0.94rem;
-        margin: 0 0 0.55rem 0;
+        color: #424245;
+        font-size: 0.93rem;
+        margin: 0 0 0.6rem 0;
     }
-    .nv-job-meta strong { color: #2A1810; }
+    .nv-job-meta strong {
+        color: #1D1D1F;
+        font-weight: 500;
+    }
     .nv-job-meta .nv-source {
-        color: #8C7560;
+        color: #86868B;
         font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
         margin-left: 0.5rem;
     }
     .nv-job-summary {
-        color: #4A382A;
-        font-size: 0.93rem;
+        color: #424245;
+        font-size: 0.92rem;
         line-height: 1.55;
-        margin: 0.4rem 0 0.5rem 0;
+        margin: 0.35rem 0 0.4rem 0;
     }
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: #EFE7D8;
-        border-right: 1px solid #D4C4A8;
+        background: #F5F5F7;
+        border-right: 1px solid #E5E5E7;
     }
     [data-testid="stSidebar"] h2 {
-        color: #3E2818;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        border-bottom: 1px solid #C9A063;
-        padding-bottom: 0.4rem;
+        color: #1D1D1F;
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        border-bottom: none;
+        padding: 0;
+        margin-bottom: 0.5rem;
+    }
+    [data-testid="stSidebar"] label {
+        color: #1D1D1F;
+        font-weight: 500;
+        font-size: 0.88rem;
+    }
+
+    /* Multiselect tags / pillen — neutraal Apple-grijs i.p.v. donker bruin */
+    [data-baseweb="tag"] {
+        background-color: #E8E8ED !important;
+        color: #1D1D1F !important;
+        border-radius: 6px !important;
+        border: none !important;
+        font-weight: 500 !important;
+    }
+    [data-baseweb="tag"] svg {
+        color: #6E6E73 !important;
+        fill: #6E6E73 !important;
+    }
+    [data-baseweb="tag"]:hover {
+        background-color: #DCDCE0 !important;
+    }
+
+    /* Inputs / dropdowns */
+    [data-baseweb="select"] > div,
+    .stTextInput input,
+    .stTextArea textarea {
+        background: #FFFFFF !important;
+        border-radius: 8px !important;
+        border-color: #D2D2D7 !important;
     }
 
     /* Buttons */
     .stButton button {
-        background: #FBF7EE;
-        border: 1px solid #C9A063;
-        color: #3E2818;
-        font-family: 'Source Serif Pro', Georgia, serif;
-        border-radius: 3px;
+        background: #FFFFFF;
+        border: 1px solid #D2D2D7;
+        color: #1D1D1F;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.15s ease;
     }
     .stButton button:hover {
-        background: #C9A063;
-        color: #FBF7EE;
-        border-color: #5C3A1E;
+        background: #F5F5F7;
+        border-color: #B0B0B5;
+    }
+    .stButton button[kind="primary"], .stFormSubmitButton button {
+        background: #0071E3;
+        color: #FFFFFF;
+        border: none;
+    }
+    .stButton button[kind="primary"]:hover, .stFormSubmitButton button:hover {
+        background: #0077ED;
+    }
+
+    /* Captions kleiner en grijzer */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        color: #86868B;
+        font-size: 0.83rem;
     }
     </style>
     """,
@@ -290,7 +340,7 @@ def login_gate() -> bool:
         """
         <div class="nv-header">
             <h1>Vacaturemonitor</h1>
-            <p class="nv-subtitle">Hout · Bouwmaterialen · Senior commercieel management</p>
+            <p class="nv-subtitle">Hout & bouwmaterialen — senior commercieel</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -325,9 +375,9 @@ def header() -> None:
     st.markdown(
         f"""
         <div class="nv-header">
-            <h1>Vacaturemonitor — Hout &amp; Bouwmaterialen</h1>
+            <h1>Vacaturemonitor</h1>
             <p class="nv-subtitle">
-                Senior commerciële &amp; leidinggevende rollen ·
+                Hout &amp; bouwmaterialen · Senior commercieel ·
                 {NIELS_PROFILE['experience_years']}+ jaar ervaring ·
                 {NIELS_PROFILE['career_history'][-1]}
             </p>
