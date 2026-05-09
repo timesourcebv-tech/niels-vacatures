@@ -343,6 +343,73 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Donker thema — overrides bovenop het standaard lichte thema
+if DARK:
+    st.markdown(
+        """
+        <style>
+        .stApp, body { background: #1C1C1E !important; color: #F5F5F7 !important; }
+        h1, h2, h3, h4 { color: #F5F5F7 !important; }
+        p, span, div, label, li { color: #E5E5E7; }
+        .nv-header { border-bottom-color: #38383A !important; }
+        .nv-header h1 { color: #F5F5F7 !important; }
+        .nv-header .nv-subtitle { color: #98989D !important; }
+        [data-testid="stMetric"] { background: #2C2C2E !important; }
+        [data-testid="stMetricValue"] { color: #F5F5F7 !important; }
+        [data-testid="stMetricLabel"] { color: #98989D !important; }
+        [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
+            background: #2C2C2E !important;
+            border-color: #38383A !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+        [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+        }
+        .nv-job-title, .nv-job-title a { color: #F5F5F7 !important; }
+        .nv-job-title a:hover { color: #4DA3FF !important; }
+        .nv-job-meta { color: #C7C7CC !important; }
+        .nv-job-meta strong { color: #F5F5F7 !important; }
+        .nv-job-meta .nv-source { color: #98989D !important; }
+        .nv-job-summary { color: #C7C7CC !important; }
+        .nv-score-high { background: #1B3A1F !important; color: #A4D4A8 !important; }
+        .nv-score-mid  { background: #3D2E0F !important; color: #F0C97A !important; }
+        .nv-score-low  { background: #2C2C2E !important; color: #98989D !important; }
+        [data-testid="stSidebar"] {
+            background: #2C2C2E !important;
+            border-right-color: #38383A !important;
+        }
+        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2,
+        [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label,
+        [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {
+            color: #F5F5F7 !important;
+        }
+        [data-baseweb="tag"] {
+            background-color: #3A3A3C !important;
+            color: #F5F5F7 !important;
+        }
+        [data-baseweb="tag"] svg { color: #98989D !important; fill: #98989D !important; }
+        [data-baseweb="select"] > div, .stTextInput input, .stTextArea textarea,
+        [data-baseweb="popover"], [data-baseweb="menu"] {
+            background: #2C2C2E !important;
+            color: #F5F5F7 !important;
+            border-color: #38383A !important;
+        }
+        .stButton button {
+            background: #2C2C2E !important;
+            border-color: #38383A !important;
+            color: #F5F5F7 !important;
+        }
+        .stButton button:hover {
+            background: #3A3A3C !important;
+            border-color: #48484A !important;
+        }
+        .stCaption, [data-testid="stCaptionContainer"] { color: #98989D !important; }
+        hr { border-color: #38383A !important; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 STATUS_LABELS = {
     "new": "Nieuw",
     "applied": "Gesolliciteerd",
