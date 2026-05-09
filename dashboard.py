@@ -354,6 +354,22 @@ st.markdown(
         color: #86868B;
         font-size: 0.88rem;
     }
+
+    /* Favoriet-hart button — strak, geen kader, kleurwissel */
+    button[data-testid="stBaseButton-secondary"][aria-label*="favoriet"],
+    .nv-fav-btn button {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        font-size: 1.5rem !important;
+        line-height: 1 !important;
+        cursor: pointer;
+        box-shadow: none !important;
+        min-height: 0 !important;
+        transition: transform 0.1s ease;
+    }
+    .nv-fav-btn button:hover { transform: scale(1.15); background: transparent !important; }
+    .nv-fav-btn button:focus { outline: none !important; box-shadow: none !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -644,22 +660,30 @@ def render_job_card(row: pd.Series) -> None:
         else "nv-score-mid" if score >= 50
         else "nv-score-low"
     )
-    fav_icon = "🪵 ❤" if is_fav else "🤍"
+    fav_icon = "❤️" if is_fav else "🤍"
     fav_help = "Verwijder uit favorieten" if is_fav else "Markeer als favoriet"
 
     with st.container(border=True):
         c1, c2 = st.columns([5, 1.6])
         with c1:
-            st.markdown(
-                f"""
-                <div class="nv-job-title"><a href="{row['url']}" target="_blank">{title}</a></div>
-                <div class="nv-job-meta">
-                    <strong>{company}</strong> · {location}
-                    <span class="nv-source">{source} · {posted}</span>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            fav_col, title_col = st.columns([0.07, 0.93])
+            with fav_col:
+                st.markdown('<div class="nv-fav-btn">', unsafe_allow_html=True)
+                if st.button(fav_icon, key=f"fav_{row['id']}", help=fav_help):
+                    toggle_favorite(int(row["id"]))
+                    st.rerun()
+                st.markdown("</div>", unsafe_allow_html=True)
+            with title_col:
+                st.markdown(
+                    f"""
+                    <div class="nv-job-title"><a href="{row['url']}" target="_blank">{title}</a></div>
+                    <div class="nv-job-meta">
+                        <strong>{company}</strong> · {location}
+                        <span class="nv-source">{source} · {posted}</span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
             desc = _clean_description(row.get("description"))
             if desc:
                 short = desc if len(desc) <= 320 else desc[:317].rsplit(" ", 1)[0] + "…"
@@ -677,23 +701,17 @@ def render_job_card(row: pd.Series) -> None:
                 f"</div>",
                 unsafe_allow_html=True,
             )
-            b_l, b_r = st.columns([1, 1])
-            with b_l:
-                if st.button(fav_icon, key=f"fav_{row['id']}", help=fav_help, use_container_width=True):
-                    toggle_favorite(int(row["id"]))
-                    st.rerun()
-            with b_r:
-                new_status = st.selectbox(
-                    "Status",
-                    STATUS_OPTIONS,
-                    index=STATUS_OPTIONS.index(status),
-                    format_func=lambda s: STATUS_LABELS[s],
-                    key=f"status_{row['id']}",
-                    label_visibility="collapsed",
-                )
-                if new_status != status:
-                    update_status(int(row["id"]), new_status, None)
-                    st.rerun()
+            new_status = st.selectbox(
+                "Status",
+                STATUS_OPTIONS,
+                index=STATUS_OPTIONS.index(status),
+                format_func=lambda s: STATUS_LABELS[s],
+                key=f"status_{row['id']}",
+                label_visibility="collapsed",
+            )
+            if new_status != status:
+                update_status(int(row["id"]), new_status, None)
+                st.rerun()
 
 
 def main() -> None:
