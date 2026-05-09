@@ -6,13 +6,28 @@ Online:        Streamlit Community Cloud — entrypoint = dashboard.py
 from __future__ import annotations
 
 import datetime as _dt
+import html as _html
+import re as _re
 
 import extra_streamlit_components as stx
 import pandas as pd
 import streamlit as st
+from bs4 import BeautifulSoup
 
 from config import NIELS_PROFILE
 from db import fetch_jobs, get_conn, stats, toggle_favorite, update_status
+
+
+def _clean_description(raw: object) -> str:
+    """Strip HTML-tags en decodeer entities — Adzuna levert description met HTML."""
+    if not raw:
+        return ""
+    s = str(raw)
+    if "<" in s and ">" in s:
+        s = BeautifulSoup(s, "lxml").get_text(" ", strip=True)
+    s = _html.unescape(s)
+    s = _re.sub(r"\s+", " ", s).strip()
+    return s
 
 # Per provincie: trefwoorden die in de location-string kunnen voorkomen
 # (provincienaam + grote en kleine steden in die provincie).
@@ -517,19 +532,46 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
             format_func=lambda x: STATUS_LABELS[x],
         )
         favorites_only = st.checkbox("Alleen favorieten", value=False)
-
-        provincies = st.multiselect(
-            "Provincies",
-            options=list(PROVINCIES.keys()),
-            default=list(PROVINCIES.keys()),
-            help="Vink provincies uit om vacatures uit die regio te verbergen",
-        )
         min_score = 0
 
+        # Provincies — checkbox-grid in expander
+        with st.expander(
+            f"Provincies",
+            expanded=False,
+        ):
+            cc1, cc2 = st.columns(2)
+            with cc1:
+                if st.button("Alles", key="prov_all", use_container_width=True):
+                    for p in PROVINCIES:
+                        st.session_state[f"prov_{p}"] = True
+                    st.rerun()
+            with cc2:
+                if st.button("Geen", key="prov_none", use_container_width=True):
+                    for p in PROVINCIES:
+                        st.session_state[f"prov_{p}"] = False
+                    st.rerun()
+            provincies = []
+            for prov in PROVINCIES:
+                if st.checkbox(
+                    prov,
+                    value=st.session_state.get(f"prov_{prov}", True),
+                    key=f"prov_{prov}",
+                ):
+                    provincies.append(prov)
+
+        # Bronnen — checkbox-grid in expander
         with get_conn() as conn:
             sources_rows = conn.execute("SELECT DISTINCT source FROM jobs").fetchall()
         sources_all = sorted([r["source"] for r in sources_rows])
-        sources = st.multiselect("Bronnen", sources_all, default=sources_all)
+        with st.expander("Bronnen", expanded=False):
+            sources = []
+            for src in sources_all:
+                if st.checkbox(
+                    src,
+                    value=st.session_state.get(f"src_{src}", True),
+                    key=f"src_{src}",
+                ):
+                    sources.append(src)
 
         search = st.text_input("Zoeken in titel/bedrijf", "")
 
@@ -581,9 +623,8 @@ def render_job_card(row: pd.Series) -> None:
                 """,
                 unsafe_allow_html=True,
             )
-            desc_raw = row.get("description")
-            if desc_raw:
-                desc = str(desc_raw).strip()
+            desc = _clean_description(row.get("description"))
+            if desc:
                 short = desc if len(desc) <= 320 else desc[:317].rsplit(" ", 1)[0] + "…"
                 st.markdown(
                     f"<div class='nv-job-summary'>{short}</div>",
