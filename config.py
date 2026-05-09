@@ -206,9 +206,13 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "machinaal", "modelmaker", "tekenaar", "constructeur",
     "voorman", "ploegleider", "uitvoerder", "werkvoorbereider",
     "verpleegkundige", "verzorgende", "zorgkundige",
-    "pedagogisch", "kinderopvang",
+    "pedagogisch", "kinderopvang", "kinderdagverblijf",
+    "kinderdagcentrum", "ziekenhuis", "verpleeghuis",
+    "verzorgingstehuis", "thuiszorg",
+    "uitzendbedrijf", "uitzendbureau",
     "leerling", "stagiair", "trainee", "bijbaan",
     "orderpicker", "expediteur", "machinist", "machinebediener",
+    "horeca", "restaurant", "kapper",
 ]
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
