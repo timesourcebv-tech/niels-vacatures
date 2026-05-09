@@ -5,6 +5,9 @@ Online:        Streamlit Community Cloud — entrypoint = dashboard.py
 """
 from __future__ import annotations
 
+import datetime as _dt
+
+import extra_streamlit_components as stx
 import pandas as pd
 import streamlit as st
 
@@ -41,7 +44,13 @@ STATUS_OPTIONS = list(STATUS_LABELS.keys())
 
 # ──────────────────────────────────────────────────────────
 # Login-gate via Streamlit secrets (username + wachtwoord)
+# Username wordt onthouden in een cookie (90 dagen).
 # ──────────────────────────────────────────────────────────
+@st.cache_resource
+def _cookie_manager() -> stx.CookieManager:
+    return stx.CookieManager(key="niels_vac_cookies")
+
+
 def login_gate() -> bool:
     try:
         user_required = st.secrets.get("APP_USERNAME", "")
@@ -52,13 +61,21 @@ def login_gate() -> bool:
         return True
     if st.session_state.get("authed"):
         return True
+
+    cookies = _cookie_manager()
+    saved_user = cookies.get("niels_username") or ""
+
     st.title("🪵 Vacatures voor Niels")
     with st.form("login"):
-        user = st.text_input("Gebruikersnaam")
+        user = st.text_input("Gebruikersnaam", value=saved_user)
         pw = st.text_input("Wachtwoord", type="password")
         submitted = st.form_submit_button("Inloggen")
     if submitted:
         if user.strip().lower() == user_required.strip().lower() and pw == pw_required:
+            cookies.set(
+                "niels_username", user,
+                expires_at=_dt.datetime.now() + _dt.timedelta(days=90),
+            )
             st.session_state["authed"] = True
             st.rerun()
         else:
