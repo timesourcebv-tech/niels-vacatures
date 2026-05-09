@@ -137,10 +137,9 @@ def score_job(
     if any(neg in loc for neg in NEGATIVE_LOCATIONS_BE):
         score -= 30
 
-    # Geen vakgebied-signaal: cap op 40 ipv hard 0. Vacature komt nog in DB
-    # maar onderaan; STRICT_NEGATIVE-filter (FMCG/healthcare/retail) zorgt dat
-    # niet-relevante branches al via de titel buiten de deur blijven.
+    # Strict: geen vakgebied-signaal in titel/bedrijf/beschrijving → score 0.
+    # Vacature komt niet in DB.
     if not has_industry_signal:
-        score = min(score, 40)
+        return 0
 
     return max(0, min(100, score))
