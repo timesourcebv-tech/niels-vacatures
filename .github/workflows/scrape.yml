@@ -40,5 +40,10 @@ jobs:
             echo "Geen wijzigingen in database"
           else
             git commit -m "chore: dagelijkse vacature-update [skip ci]"
-            git push
+            # Retry tegen race-conditions met handmatige pushes
+            for i in 1 2 3; do
+              git pull --rebase --autostash origin main && git push && break
+              echo "push attempt $i failed, retrying..."
+              sleep 5
+            done
           fi
