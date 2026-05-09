@@ -213,6 +213,7 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "leerling", "stagiair", "trainee", "bijbaan",
     "orderpicker", "expediteur", "machinist", "machinebediener",
     "horeca", "restaurant", "kapper",
+    "productie",  # productieleider/productiemedewerker/teamlead productie
 ]
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)

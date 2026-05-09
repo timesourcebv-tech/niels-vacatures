@@ -30,15 +30,15 @@ CREATE TABLE IF NOT EXISTS jobs (
 CREATE INDEX IF NOT EXISTS idx_jobs_score ON jobs(score DESC);
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
 CREATE INDEX IF NOT EXISTS idx_jobs_discovered ON jobs(discovered_at DESC);
-CREATE INDEX IF NOT EXISTS idx_jobs_favorite ON jobs(favorite);
 """
 
 
 def _migrate(conn: sqlite3.Connection) -> None:
-    """Voeg ontbrekende kolommen toe aan bestaande databases."""
+    """Voeg ontbrekende kolommen + indices toe aan bestaande databases."""
     cols = {r["name"] for r in conn.execute("PRAGMA table_info(jobs)").fetchall()}
     if "favorite" not in cols:
         conn.execute("ALTER TABLE jobs ADD COLUMN favorite INTEGER DEFAULT 0")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_jobs_favorite ON jobs(favorite)")
 
 
 def get_conn() -> sqlite3.Connection:
