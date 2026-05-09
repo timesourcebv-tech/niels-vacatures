@@ -142,377 +142,334 @@ st.set_page_config(
     layout="wide",
 )
 
-# Theme toggle — moet vóór CSS-injectie zodat de juiste tinten worden geladen
+# Theme toggle — voor CSS-injectie zodat de juiste palette wordt geladen
 if "dark_mode" not in st.session_state:
     st.session_state["dark_mode"] = False
 DARK = st.session_state["dark_mode"]
 
-# Kleurpalet — wisselt tussen licht en donker
+# ── Nexus-stijl CSS (light + dark) ────────────────────────────────────
+# Geen font-family override — Streamlit's Source Sans 3 + Material Symbols
+# blijven intact, anders breken pijltjes/hartjes als icoon-glyphs.
+NEXUS_CSS = """
+<style>
+/* === Light (default) === */
+[data-testid="stAppViewContainer"], [data-testid="stMain"], section.main,
+.stApp { background: #f5f5f7 !important; }
+[data-testid="stSidebar"] {
+    background: #ffffff !important;
+    border-right: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+.nv-header {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem 1.4rem 1.8rem;
+    margin: 0 0 1.2rem 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.nv-header h1 {
+    color: #1d1d1f;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem 0;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+.nv-header .nv-subtitle {
+    color: #86868b;
+    font-size: 0.96rem;
+    margin: 0;
+    line-height: 1.45;
+}
+
+[data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+[data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.14) !important;
+}
+
+[data-testid="stMetric"] {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 0.9rem 1.1rem;
+    border-radius: 10px;
+}
+[data-testid="stMetricValue"] {
+    font-weight: 700;
+    color: #1d1d1f;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 0.78rem;
+    color: #86868b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.nv-score {
+    display: inline-block;
+    padding: 0.32rem 0.8rem;
+    border-radius: 980px;
+    font-weight: 600;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+}
+.nv-score-high { background: rgba(0,113,227,0.10); color: #0071e3; }
+.nv-score-mid  { background: rgba(232,85,26,0.10); color: #E8551A; }
+.nv-score-low  { background: #f5f5f7; color: #86868b; }
+
+.nv-job-title {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+}
+.nv-job-title a { color: #1d1d1f; text-decoration: none; }
+.nv-job-title a:hover { color: #0071e3; }
+.nv-job-meta {
+    color: #424245;
+    font-size: 0.94rem;
+    margin: 0 0 0.55rem 0;
+    line-height: 1.45;
+}
+.nv-job-meta strong { color: #1d1d1f; font-weight: 600; }
+.nv-job-meta .nv-source {
+    color: #86868b;
+    font-size: 0.78rem;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.nv-job-summary {
+    color: #424245;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0.35rem 0 0.45rem 0;
+}
+
+[data-testid="stSidebar"] h2 {
+    color: #1d1d1f;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+[data-testid="stSidebar"] label {
+    color: #1d1d1f;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+[data-baseweb="tag"] {
+    background-color: #f5f5f7 !important;
+    color: #1d1d1f !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
+    font-weight: 500 !important;
+}
+[data-baseweb="tag"] svg {
+    color: #86868b !important;
+    fill: #86868b !important;
+}
+
+[data-baseweb="select"] > div,
+.stTextInput input,
+.stTextArea textarea {
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    border-color: rgba(0,0,0,0.14) !important;
+}
+
+.stButton button {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.14);
+    color: #1d1d1f;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+.stButton button:hover {
+    background: #fafafa;
+    border-color: rgba(0,0,0,0.22);
+}
+.stFormSubmitButton button {
+    background: #0071e3;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+.stFormSubmitButton button:hover { background: #0077ed; }
+
+.nv-metric-tile button {
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
+    border-radius: 10px !important;
+    padding: 0.95rem 1.1rem !important;
+    height: auto !important;
+    min-height: 5.2rem !important;
+    text-align: left !important;
+    white-space: pre-line !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    color: #1d1d1f !important;
+    transition: all 0.15s ease;
+}
+.nv-metric-tile button:hover { border-color: rgba(0,0,0,0.18) !important; }
+.nv-metric-tile-active button {
+    background: rgba(0,113,227,0.08) !important;
+    border-color: #0071e3 !important;
+    color: #0071e3 !important;
+}
+.nv-metric-tile button p {
+    font-size: 0.74rem !important;
+    color: #86868b !important;
+    margin: 0 0 0.3rem 0 !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+.nv-metric-tile-active button p { color: #0071e3 !important; }
+
+.nv-fav-btn button {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 1.4rem !important;
+    line-height: 1 !important;
+    cursor: pointer;
+    box-shadow: none !important;
+    min-height: 0 !important;
+    transition: transform 0.1s ease;
+}
+.nv-fav-btn button:hover { transform: scale(1.15); background: transparent !important; }
+.nv-fav-btn button:focus { outline: none !important; box-shadow: none !important; }
+
+.stCaption, [data-testid="stCaptionContainer"] {
+    color: #86868b;
+    font-size: 0.84rem;
+}
+
+h1, h2, h3, h4 {
+    color: #1d1d1f;
+    letter-spacing: -0.015em;
+    font-weight: 700;
+}
+</style>
+"""
+
+NEXUS_DARK_CSS = """
+<style>
+/* === Dark overrides === */
+[data-testid="stAppViewContainer"], [data-testid="stMain"], section.main,
+.stApp { background: #000000 !important; }
+[data-testid="stSidebar"] {
+    background: #1c1c1e !important;
+    border-right: 1px solid rgba(255,255,255,0.10) !important;
+}
+
+h1, h2, h3, h4, p, span, div, label, li { color: #f5f5f7; }
+
+.nv-header {
+    background: #1c1c1e;
+    border-color: rgba(255,255,255,0.10);
+    box-shadow: none;
+}
+.nv-header h1 { color: #f5f5f7; }
+.nv-header .nv-subtitle { color: #8e8e93; }
+
+[data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
+    background: #1c1c1e !important;
+    border-color: rgba(255,255,255,0.10) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
+}
+[data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    border-color: rgba(255,255,255,0.18) !important;
+}
+
+[data-testid="stMetric"] {
+    background: #1c1c1e;
+    border-color: rgba(255,255,255,0.10);
+}
+[data-testid="stMetricValue"] { color: #f5f5f7; }
+[data-testid="stMetricLabel"] { color: #8e8e93; }
+
+.nv-score-high { background: rgba(0,113,227,0.18) !important; color: #4DA3FF !important; }
+.nv-score-mid  { background: rgba(232,85,26,0.18) !important; color: #FF9966 !important; }
+.nv-score-low  { background: #2c2c2e !important; color: #8e8e93 !important; }
+
+.nv-job-title, .nv-job-title a { color: #f5f5f7 !important; }
+.nv-job-title a:hover { color: #4DA3FF !important; }
+.nv-job-meta { color: #d1d1d6 !important; }
+.nv-job-meta strong { color: #f5f5f7 !important; }
+.nv-job-meta .nv-source { color: #8e8e93 !important; }
+.nv-job-summary { color: #d1d1d6 !important; }
+
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3, [data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p, [data-testid="stSidebar"] span {
+    color: #f5f5f7 !important;
+}
+
+[data-baseweb="tag"] {
+    background-color: #2c2c2e !important;
+    color: #f5f5f7 !important;
+    border-color: rgba(255,255,255,0.10) !important;
+}
+[data-baseweb="tag"] svg { color: #8e8e93 !important; fill: #8e8e93 !important; }
+
+[data-baseweb="select"] > div, .stTextInput input, .stTextArea textarea,
+[data-baseweb="popover"], [data-baseweb="menu"] {
+    background: #2c2c2e !important;
+    color: #f5f5f7 !important;
+    border-color: rgba(255,255,255,0.10) !important;
+}
+
+.stButton button {
+    background: #1c1c1e !important;
+    border-color: rgba(255,255,255,0.10) !important;
+    color: #f5f5f7 !important;
+}
+.stButton button:hover {
+    background: #2c2c2e !important;
+    border-color: rgba(255,255,255,0.18) !important;
+}
+
+.nv-metric-tile button {
+    background: #1c1c1e !important;
+    border-color: rgba(255,255,255,0.10) !important;
+    color: #f5f5f7 !important;
+}
+.nv-metric-tile button:hover { border-color: rgba(255,255,255,0.18) !important; }
+.nv-metric-tile-active button {
+    background: rgba(0,113,227,0.18) !important;
+    border-color: #0071e3 !important;
+    color: #4DA3FF !important;
+}
+.nv-metric-tile button p { color: #8e8e93 !important; }
+.nv-metric-tile-active button p { color: #4DA3FF !important; }
+
+.stCaption, [data-testid="stCaptionContainer"] { color: #8e8e93 !important; }
+hr { border-color: rgba(255,255,255,0.10) !important; }
+</style>
+"""
+
+st.markdown(NEXUS_CSS, unsafe_allow_html=True)
 if DARK:
-    C = {
-        "bg": "#1C1C1E", "bg_alt": "#2C2C2E", "card": "#2C2C2E",
-        "border": "#38383A", "text": "#F5F5F7", "text_2": "#98989D",
-        "text_3": "#636366", "tag_bg": "#3A3A3C", "tag_text": "#F5F5F7",
-        "tag_close": "#98989D", "input_bg": "#2C2C2E",
-        "score_high_bg": "#1B3A1F", "score_high_fg": "#A4D4A8",
-        "score_mid_bg":  "#3D2E0F", "score_mid_fg":  "#F0C97A",
-        "score_low_bg":  "#2C2C2E", "score_low_fg":  "#98989D",
-    }
-else:
-    C = {
-        "bg": "#FFFFFF", "bg_alt": "#F5F5F7", "card": "#FFFFFF",
-        "border": "#E5E5E7", "text": "#1D1D1F", "text_2": "#424245",
-        "text_3": "#86868B", "tag_bg": "#E8E8ED", "tag_text": "#1D1D1F",
-        "tag_close": "#6E6E73", "input_bg": "#FFFFFF",
-        "score_high_bg": "#E8F5E9", "score_high_fg": "#1B5E20",
-        "score_mid_bg":  "#FFF3E0", "score_mid_fg":  "#B26A00",
-        "score_low_bg":  "#F2F2F7", "score_low_fg":  "#6E6E73",
-    }
-
-# zen.com-geïnspireerde styling — forest-groen primair, lime accent
-# Hoge-specificity selectors via [data-testid=...] om Streamlit's eigen CSS te overschrijven
-st.markdown(
-    """
-    <style>
-    /* Inter import niet meer gebruikt — Streamlit's Source Sans 3 behouden */
-
-    /* Streamlit's standaard 'Source Sans 3' font behouden zodat
-       Material Symbols icons (pijltjes, hartjes etc.) blijven werken. */
-
-    /* Achtergrond — meerdere selectors voor zekerheid */
-    [data-testid="stAppViewContainer"] { background: #FAFAF7 !important; }
-    [data-testid="stMain"] { background: #FAFAF7 !important; }
-    section.main { background: #FAFAF7 !important; }
-    .stApp { background: #FAFAF7 !important; }
-
-    :root {
-        --nv-bg: #FAFAF7;
-        --nv-card: #FFFFFF;
-        --nv-border: #E8E6DF;
-        --nv-text: #0E1E1A;
-        --nv-text-2: #4A5A55;
-        --nv-text-3: #8B958F;
-        --nv-primary: #0F4C3A;
-        --nv-primary-hover: #0A3A2C;
-        --nv-accent: #C7F284;
-        --nv-tag-bg: #EFEDE6;
-    }
-
-    /* Smoothing en hoofd-tekst kleur. Geen font-family override:
-       Streamlit's Source Sans 3 + Material Symbols icons blijven intact. */
-    [data-testid="stAppViewContainer"], [data-testid="stSidebar"] {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    h1, h2, h3, h4 {
-        letter-spacing: -0.015em;
-        color: #0E1E1A;
-        font-weight: 700;
-    }
-
-    /* Header */
-    .nv-header {
-        padding: 2rem 0 1rem 0;
-        margin: 0 0 1.5rem 0;
-        border-bottom: 1px solid #E8E6DF;
-    }
-    .nv-header h1 {
-        font-size: 2.1rem;
-        font-weight: 700;
-        letter-spacing: -0.015em;
-        color: #0E1E1A;
-        margin: 0 0 0.4rem 0;
-        line-height: 1.2;
-    }
-    .nv-header .nv-subtitle {
-        color: #8B958F;
-        font-size: 1.05rem;
-        font-weight: 400;
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    /* Metrics */
-    [data-testid="stMetric"] {
-        background: #FFFFFF;
-        padding: 1rem 1.2rem;
-        border-radius: 12px;
-    }
-    [data-testid="stMetricValue"] {
-        font-weight: 600;
-        color: #0E1E1A;
-        font-size: 1.6rem;
-        letter-spacing: -0.02em;
-    }
-    [data-testid="stMetricLabel"] {
-        font-size: 0.85rem;
-        color: #8B958F;
-        font-weight: 500;
-    }
-
-    /* Vacature-cards */
-    [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #FFFFFF !important;
-        border: 1px solid #E8E6DF !important;
-        border-radius: 14px !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        transition: box-shadow 0.2s ease, transform 0.2s ease;
-    }
-    [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Score badge */
-    .nv-score {
-        display: inline-block;
-        padding: 0.35rem 0.95rem;
-        border-radius: 980px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        white-space: nowrap;
-    }
-    .nv-score-high { background: #E8F5E9; color: #1B5E20; }
-    .nv-score-mid  { background: #FFF3E0; color: #B26A00; }
-    .nv-score-low  { background: #F2F2F7; color: #8B958F; }
-
-    /* Vacature-titel */
-    .nv-job-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #0E1E1A;
-        margin: 0 0 0.3rem 0;
-        line-height: 1.35;
-    }
-    .nv-job-title a {
-        color: #0E1E1A;
-        text-decoration: none;
-    }
-    .nv-job-title a:hover {
-        color: #0F4C3A;
-    }
-    .nv-job-meta {
-        color: #424245;
-        font-size: 0.98rem;
-        margin: 0 0 0.6rem 0;
-        line-height: 1.45;
-    }
-    .nv-job-meta strong {
-        color: #0E1E1A;
-        font-weight: 600;
-    }
-    .nv-job-meta .nv-source {
-        color: #8B958F;
-        font-size: 0.85rem;
-        margin-left: 0.5rem;
-    }
-    .nv-job-summary {
-        color: #3A3A3C;
-        font-size: 0.97rem;
-        line-height: 1.6;
-        margin: 0.4rem 0 0.5rem 0;
-    }
-
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background: #FFFFFF;
-        border-right: 1px solid #E5E5E7;
-    }
-    [data-testid="stSidebar"] h2 {
-        color: #0E1E1A;
-        font-size: 1.15rem;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        border-bottom: none;
-        padding: 0;
-        margin-bottom: 0.5rem;
-    }
-    [data-testid="stSidebar"] label {
-        color: #0E1E1A;
-        font-weight: 500;
-        font-size: 0.95rem;
-    }
-
-    /* Multiselect tags / pillen — neutraal Apple-grijs i.p.v. donker bruin */
-    [data-baseweb="tag"] {
-        background-color: #E8E8ED !important;
-        color: #0E1E1A !important;
-        border-radius: 6px !important;
-        border: none !important;
-        font-weight: 500 !important;
-    }
-    [data-baseweb="tag"] svg {
-        color: #8B958F !important;
-        fill: #8B958F !important;
-    }
-    [data-baseweb="tag"]:hover {
-        background-color: #DCDCE0 !important;
-    }
-
-    /* Inputs / dropdowns */
-    [data-baseweb="select"] > div,
-    .stTextInput input,
-    .stTextArea textarea {
-        background: #FFFFFF !important;
-        border-radius: 8px !important;
-        border-color: #E8E6DF !important;
-    }
-
-    /* Buttons */
-    .stButton button {
-        background: #FFFFFF;
-        border: 1px solid #E8E6DF;
-        color: #0E1E1A;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.15s ease;
-    }
-    .stButton button:hover {
-        background: #FFFFFF;
-        border-color: #B0B0B5;
-    }
-    .stButton button[kind="primary"], .stFormSubmitButton button {
-        background: #0F4C3A;
-        color: #FFFFFF;
-        border: none;
-    }
-    .stButton button[kind="primary"]:hover, .stFormSubmitButton button:hover {
-        background: #0A3A2C;
-    }
-
-    /* Captions kleiner en grijzer */
-    .stCaption, [data-testid="stCaptionContainer"] {
-        color: #8B958F;
-        font-size: 0.88rem;
-    }
-
-    /* Favoriet-hart button — strak, geen kader, kleurwissel */
-    button[data-testid="stBaseButton-secondary"][aria-label*="favoriet"],
-    .nv-fav-btn button {
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        font-size: 1.5rem !important;
-        line-height: 1 !important;
-        cursor: pointer;
-        box-shadow: none !important;
-        min-height: 0 !important;
-        transition: transform 0.1s ease;
-    }
-    .nv-fav-btn button:hover { transform: scale(1.15); background: transparent !important; }
-    .nv-fav-btn button:focus { outline: none !important; box-shadow: none !important; }
-
-    /* Klikbare metric-tegels bovenaan — zen vibe */
-    .nv-metric-tile button {
-        background: #FFFFFF !important;
-        border: 1px solid #E8E6DF !important;
-        border-radius: 16px !important;
-        padding: 1.05rem 1.25rem !important;
-        height: auto !important;
-        min-height: 5.6rem !important;
-        text-align: left !important;
-        white-space: pre-line !important;
-        font-weight: 600 !important;
-        line-height: 1.35 !important;
-        color: #0E1E1A !important;
-        transition: all 0.18s ease;
-    }
-    .nv-metric-tile button:hover {
-        background: #FFFFFF !important;
-        border-color: #0F4C3A !important;
-        transform: translateY(-1px);
-    }
-    .nv-metric-tile-active button {
-        background: #0F4C3A !important;
-        border-color: #0F4C3A !important;
-        color: #FFFFFF !important;
-        box-shadow: 0 4px 16px rgba(15, 76, 58, 0.22) !important;
-    }
-    .nv-metric-tile-active button:hover {
-        background: #0A3A2C !important;
-        color: #FFFFFF !important;
-    }
-    .nv-metric-tile button p {
-        font-size: 0.78rem !important;
-        color: #8B958F !important;
-        margin: 0 0 0.35rem 0 !important;
-        font-weight: 500 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.06em !important;
-    }
-    .nv-metric-tile-active button p {
-        color: rgba(255,255,255,0.75) !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# Donker thema — overrides bovenop het standaard lichte thema
-if DARK:
-    st.markdown(
-        """
-        <style>
-        .stApp, body { background: #1C1C1E !important; color: #F5F5F7 !important; }
-        h1, h2, h3, h4 { color: #F5F5F7 !important; }
-        p, span, div, label, li { color: #E5E5E7; }
-        .nv-header { border-bottom-color: #38383A !important; }
-        .nv-header h1 { color: #F5F5F7 !important; }
-        .nv-header .nv-subtitle { color: #98989D !important; }
-        [data-testid="stMetric"] { background: #2C2C2E !important; }
-        [data-testid="stMetricValue"] { color: #F5F5F7 !important; }
-        [data-testid="stMetricLabel"] { color: #98989D !important; }
-        [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
-            background: #2C2C2E !important;
-            border-color: #38383A !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-        }
-        [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-        }
-        .nv-job-title, .nv-job-title a { color: #F5F5F7 !important; }
-        .nv-job-title a:hover { color: #4DA3FF !important; }
-        .nv-job-meta { color: #C7C7CC !important; }
-        .nv-job-meta strong { color: #F5F5F7 !important; }
-        .nv-job-meta .nv-source { color: #98989D !important; }
-        .nv-job-summary { color: #C7C7CC !important; }
-        .nv-score-high { background: #1B3A1F !important; color: #A4D4A8 !important; }
-        .nv-score-mid  { background: #3D2E0F !important; color: #F0C97A !important; }
-        .nv-score-low  { background: #2C2C2E !important; color: #98989D !important; }
-        [data-testid="stSidebar"] {
-            background: #2C2C2E !important;
-            border-right-color: #38383A !important;
-        }
-        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2,
-        [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label,
-        [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {
-            color: #F5F5F7 !important;
-        }
-        [data-baseweb="tag"] {
-            background-color: #3A3A3C !important;
-            color: #F5F5F7 !important;
-        }
-        [data-baseweb="tag"] svg { color: #98989D !important; fill: #98989D !important; }
-        [data-baseweb="select"] > div, .stTextInput input, .stTextArea textarea,
-        [data-baseweb="popover"], [data-baseweb="menu"] {
-            background: #2C2C2E !important;
-            color: #F5F5F7 !important;
-            border-color: #38383A !important;
-        }
-        .stButton button {
-            background: #2C2C2E !important;
-            border-color: #38383A !important;
-            color: #F5F5F7 !important;
-        }
-        .stButton button:hover {
-            background: #3A3A3C !important;
-            border-color: #48484A !important;
-        }
-        .stCaption, [data-testid="stCaptionContainer"] { color: #98989D !important; }
-        hr { border-color: #38383A !important; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown(NEXUS_DARK_CSS, unsafe_allow_html=True)
 
 STATUS_LABELS = {
     "new": "Nieuw",
