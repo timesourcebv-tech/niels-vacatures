@@ -234,7 +234,7 @@ HOUT_COMPANIES = HOUT_COMPANIES_NL + HOUT_COMPANIES_BE + BOUWMATERIAAL_COMPANIES
 
 # Termen in titel die een hogere match-score verdienen (Niels' doelrollen)
 HIGH_VALUE_TITLE_TERMS = [
-    "manager", "business", "developer", "sales",
+    "manager", "business", "development", "sales",
     "bedrijfsleider", "vestigingsmanager",
 ]
 
@@ -268,6 +268,16 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "uitgeverij", "uitgever", "boeken",
     "customer goods", "consumer goods",
     "speelgoed", "huishoudartikelen", "spellen",
+    # IT / ERP / data / engineering (geen commerciële rol)
+    "ict", "erp", "crm", "saas",
+    "software", "frontend", "back-end", "backend", "fullstack",
+    "developer ", " developer", "ontwikkelaar",
+    "data analyst", "data engineer", "data scientist",
+    "business analyst", "process analyst", "system analyst",
+    "analyst", "analist",
+    "devops", "sysadmin", "scrum", "qa engineer", "tester",
+    "consultant",
+    "view job opportunity",
     "productie",  # productieleider/productiemedewerker/teamlead productie
     # Retail / beauty / fashion (niet hout/bouw)
     "retail", "winkelketen", "winkelmanager",

@@ -90,10 +90,26 @@ def _extract_jobpostings(soup: BeautifulSoup) -> list[dict]:
     return jobs
 
 
+def _clean_title(title: str) -> str:
+    """Strip generic prefixes als 'View job opportunity for X'."""
+    t = title.strip()
+    for prefix in [
+        "view job opportunity for ",
+        "vacature ",
+        "vacature: ",
+        "job: ",
+        "position: ",
+    ]:
+        if t.lower().startswith(prefix):
+            t = t[len(prefix):].strip()
+    return t
+
+
 def _job_from_jobposting(jp: dict, company: str, page_url: str) -> dict | None:
     title = jp.get("title")
     if not title:
         return None
+    title = _clean_title(title)
     url = jp.get("url") or jp.get("hiringOrganization", {}).get("url")
     if not url:
         identifier = jp.get("identifier")
@@ -134,7 +150,7 @@ def _job_from_link(a, company: str, page_url: str) -> dict | None:
     if not href:
         return None
     url = urljoin(page_url, href)
-    title = a.get_text(" ", strip=True)
+    title = _clean_title(a.get_text(" ", strip=True))
     if not title or len(title) < 6:
         return None
     sid = re.sub(r"[^a-z0-9]+", "-", title.lower())[:80] + "-" + company.lower().replace(" ", "-")
