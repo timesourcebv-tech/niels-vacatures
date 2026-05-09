@@ -23,6 +23,7 @@ from config import (
     POSITIVE_BOOST,
     RECRUITERS_BUILDING,
     ROLE_KEYWORDS,
+    STRICT_NEGATIVE_TITLE_SUBSTRINGS,
 )
 
 
@@ -47,6 +48,10 @@ def score_job(
     d = (description or "").lower()
     loc = (location or "").lower()
     co = (company or "").lower()
+
+    # Hard exclude — substring-match in titel (operationeel/zorg/etc.)
+    if any(sub in t for sub in STRICT_NEGATIVE_TITLE_SUBSTRINGS):
+        return 0
 
     score = 0
 

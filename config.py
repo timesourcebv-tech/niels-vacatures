@@ -195,6 +195,20 @@ HIGH_VALUE_TITLE_TERMS = [
     "bedrijfsleider", "vestigingsmanager",
 ]
 
+# HARD UITSLUITEN — als deze substring in titel zit, score = 0.
+# Substring-match (niet word-boundary), dus 'magazijn' matcht ook 'magazijnmedewerker'.
+STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
+    "operator", "magazijn", "medewerker", "chauffeur", "vrachtwagen",
+    "monteur", "timmerman", "schilder", "loodgieter", "metselaar",
+    "stratenmaker", "schrijnwerker", "elektricien",
+    "machinaal", "modelmaker", "tekenaar", "constructeur",
+    "voorman", "ploegleider", "uitvoerder", "werkvoorbereider",
+    "verpleegkundige", "verzorgende", "zorgkundige",
+    "pedagogisch", "kinderopvang",
+    "leerling", "stagiair", "trainee", "bijbaan",
+    "orderpicker", "expediteur", "machinist", "machinebediener",
+]
+
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
 RECRUITERS_BUILDING = [
     "bouwteam", "westerduin", "continu", "profmatch",
