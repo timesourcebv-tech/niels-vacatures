@@ -485,11 +485,13 @@ def login_gate() -> bool:
             cookies.set(
                 "niels_username", user,
                 expires_at=_dt.datetime.now() + _dt.timedelta(days=90),
+                key="set_username",
             )
             if remember:
                 cookies.set(
                     "niels_session", expected_token,
                     expires_at=_dt.datetime.now() + _dt.timedelta(days=30),
+                    key="set_session",
                 )
             st.session_state["authed"] = True
             st.rerun()
@@ -502,7 +504,7 @@ def logout() -> None:
     """Verwijder session-cookie en sessie-state."""
     try:
         cookies = stx.CookieManager(key="niels_vac_cookies")
-        cookies.delete("niels_session")
+        cookies.delete("niels_session", key="del_session")
     except Exception:
         pass
     st.session_state["authed"] = False
