@@ -11,20 +11,98 @@ import extra_streamlit_components as stx
 import pandas as pd
 import streamlit as st
 
-from config import CITIES_BE_NL, CITIES_NEAR, CITIES_RANDSTAD, NIELS_PROFILE
+from config import NIELS_PROFILE
 from db import fetch_jobs, get_conn, stats, toggle_favorite, update_status
 
-REGIONS = {
-    "Alles": None,
-    "Zaanstreek + omgeving": CITIES_NEAR,
-    "Randstad": CITIES_RANDSTAD,
-    "Nederland (totaal)": ["nederland", "netherlands"] + CITIES_NEAR + CITIES_RANDSTAD + [
-        "noord-holland", "zuid-holland", "utrecht", "gelderland", "noord-brabant",
-        "limburg", "overijssel", "drenthe", "groningen", "friesland", "zeeland", "flevoland",
-        "eindhoven", "tilburg", "breda", "nijmegen", "arnhem", "enschede", "groningen",
-        "maastricht", "venlo", "den bosch", "'s-hertogenbosch", "apeldoorn", "zwolle",
+# Per provincie: trefwoorden die in de location-string kunnen voorkomen
+# (provincienaam + grote en kleine steden in die provincie).
+PROVINCIES: dict[str, list[str]] = {
+    "🇳🇱 Noord-Holland": [
+        "noord-holland", "noord holland",
+        "amsterdam", "haarlem", "alkmaar", "zaandam", "zaanstad", "zaanstreek",
+        "purmerend", "hoorn", "amstelveen", "hoofddorp", "haarlemmermeer",
+        "wormerveer", "heerhugowaard", "beverwijk", "ijmuiden", "assendelft",
+        "schiphol", "den helder", "hilversum", "weesp", "diemen", "edam",
+        "uitgeest", "castricum", "bergen", "heemstede", "zandvoort", "naarden",
     ],
-    "Vlaanderen / België": ["belgië", "belgie", "belgium", "vlaanderen", "flanders"] + CITIES_BE_NL,
+    "🇳🇱 Zuid-Holland": [
+        "zuid-holland", "zuid holland",
+        "rotterdam", "den haag", "the hague", "leiden", "delft", "dordrecht",
+        "gouda", "schiedam", "vlaardingen", "spijkenisse", "zoetermeer",
+        "leidschendam", "voorburg", "rijswijk", "alphen aan den rijn",
+        "capelle aan den ijssel", "ridderkerk", "barendrecht", "papendrecht",
+    ],
+    "🇳🇱 Utrecht": [
+        "provincie utrecht", "utrecht,", "utrecht ", "utrecht-",
+        "amersfoort", "nieuwegein", "houten", "veenendaal", "zeist",
+        "ijsselstein", "woerden", "de meern", "leusden",
+    ],
+    "🇳🇱 Gelderland": [
+        "gelderland",
+        "arnhem", "nijmegen", "apeldoorn", "ede", "tiel", "harderwijk",
+        "doetinchem", "zutphen", "wageningen", "winterswijk",
+    ],
+    "🇳🇱 Noord-Brabant": [
+        "noord-brabant", "brabant",
+        "eindhoven", "tilburg", "breda", "den bosch", "'s-hertogenbosch",
+        "helmond", "oss", "roosendaal", "bergen op zoom", "veldhoven",
+        "oosterhout", "etten-leur", "waalwijk", "uden",
+    ],
+    "🇳🇱 Overijssel": [
+        "overijssel",
+        "zwolle", "enschede", "deventer", "hengelo", "almelo", "kampen",
+    ],
+    "🇳🇱 Limburg (NL)": [
+        "limburg, nederland", "limburg,nl",
+        "maastricht", "venlo", "heerlen", "sittard", "roermond", "weert",
+        "kerkrade",
+    ],
+    "🇳🇱 Flevoland": [
+        "flevoland",
+        "almere", "lelystad", "dronten", "emmeloord",
+    ],
+    "🇳🇱 Friesland": [
+        "friesland", "fryslân", "fryslan",
+        "leeuwarden", "drachten", "sneek", "heerenveen",
+    ],
+    "🇳🇱 Groningen": [
+        "groningen, nederland", "provincie groningen",
+        "groningen,", "delfzijl", "hoogezand",
+    ],
+    "🇳🇱 Drenthe": [
+        "drenthe",
+        "assen", "emmen", "meppel", "hoogeveen",
+    ],
+    "🇳🇱 Zeeland": [
+        "zeeland",
+        "middelburg", "vlissingen", "goes", "terneuzen",
+    ],
+    "🇧🇪 Antwerpen": [
+        "antwerpen", "antwerp",
+        "mechelen", "turnhout", "lier", "geel", "mortsel", "edegem",
+        "schoten", "kontich", "boom", "willebroek", "heist-op-den-berg",
+    ],
+    "🇧🇪 Oost-Vlaanderen": [
+        "oost-vlaanderen",
+        "gent", "ghent", "aalst", "sint-niklaas", "dendermonde",
+        "ronse", "ninove", "deinze", "eeklo", "wetteren",
+    ],
+    "🇧🇪 West-Vlaanderen": [
+        "west-vlaanderen",
+        "brugge", "bruges", "kortrijk", "oostende", "roeselare",
+        "ieper", "wielsbeke", "menen", "rekkem", "tielt", "torhout",
+        "knokke", "diksmuide",
+    ],
+    "🇧🇪 Vlaams-Brabant": [
+        "vlaams-brabant",
+        "leuven", "tienen", "halle", "vilvoorde", "aarschot", "diest",
+        "asse", "tervuren", "zaventem",
+    ],
+    "🇧🇪 Limburg (BE)": [
+        "limburg, belg", "limburg, vlaa",
+        "hasselt", "genk", "tongeren", "sint-truiden", "lommel",
+        "beringen", "bilzen", "maasmechelen",
+    ],
 }
 
 st.set_page_config(
@@ -105,7 +183,7 @@ def header() -> None:
     st.caption(f"Laatst bijgewerkt: {last_run}")
 
 
-def sidebar_filters() -> tuple[int, list[str], str, list[str], str, bool]:
+def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
     with st.sidebar:
         st.header("Filters")
         statuses = st.multiselect(
@@ -116,7 +194,12 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], str, bool]:
         )
         favorites_only = st.checkbox("🪵 Alleen favorieten", value=False)
 
-        region = st.selectbox("Regio", list(REGIONS.keys()), index=0)
+        provincies = st.multiselect(
+            "Provincies",
+            options=list(PROVINCIES.keys()),
+            default=list(PROVINCIES.keys()),
+            help="Vink provincies uit om vacatures uit die regio te verbergen",
+        )
         min_score = 0
 
         with get_conn() as conn:
@@ -139,7 +222,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], str, bool]:
             "uitgevoerd. Druk niet handmatig op refresh — kom morgen weer kijken "
             "voor nieuwe vacatures."
         )
-    return min_score, statuses, search, sources, region, favorites_only
+    return min_score, statuses, search, sources, provincies, favorites_only
 
 
 def render_job_card(row: pd.Series) -> None:
@@ -203,7 +286,7 @@ def main() -> None:
         return
 
     header()
-    min_score, statuses, search, sources, region, favorites_only = sidebar_filters()
+    min_score, statuses, search, sources, provincies, favorites_only = sidebar_filters()
 
     if not statuses:
         st.info("Selecteer minstens één status in de sidebar.")
@@ -221,12 +304,12 @@ def main() -> None:
         df = df[df["favorite"].fillna(0).astype(int) == 1]
     if sources:
         df = df[df["source"].isin(sources)]
-    region_terms = REGIONS.get(region)
-    if region_terms:
+    if provincies and len(provincies) < len(PROVINCIES):
         loc_lower = df["location"].fillna("").str.lower()
         mask = pd.Series(False, index=df.index)
-        for term in region_terms:
-            mask = mask | loc_lower.str.contains(term, na=False, regex=False)
+        for prov in provincies:
+            for term in PROVINCIES[prov]:
+                mask = mask | loc_lower.str.contains(term, na=False, regex=False)
         df = df[mask]
     if search:
         s = search.lower()
