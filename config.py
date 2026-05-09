@@ -118,7 +118,10 @@ INDUSTRY_KEYWORDS = [
     "osb", "mdf", "spaanplaat", "vezelplaat", "panelen",
     # Aanpalend
     "bouwmaterialen", "bouwmateriaal", "gevelbekleding",
-    "kozijnen", "deuren", "hsb",
+    "kozijnen", "hsb",
+    # 'deuren' / 'pallets' alleen specifiek (anders matcht het 'deuren openen'
+    # of 'pallet unpacking' in logistics-contexten)
+    "houten deuren", "binnendeuren", "buitendeuren", "voordeuren",
     "timmerwerk", "timmerindustrie", "schrijnwerkerij",
     "parket", "houten vloeren",
     # Bouwsector — directe afnemers van hout/bouwmateriaal
@@ -137,8 +140,8 @@ INDUSTRY_KEYWORDS = [
     # Meubelindustrie / interieurbouw (hout-gebruikers)
     "meubelindustrie", "meubelmaker", "meubelfabrikant",
     "meubelproductie", "interieurbouw", "interieurmaker",
-    # Verpakkingsindustrie hout
-    "pallet", "pallets", "palletindustrie",
+    # Verpakkingsindustrie hout (alleen specifiek, geen losse "pallet")
+    "palletindustrie", "palletfabriek",
     "houten verpakking", "exportkrat", "houten kratten",
     # Tuinhout / buitenhout
     "tuinhout", "schutting", "tuinhuis", "vlonder",
@@ -261,6 +264,10 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "leerling", "stagiair", "trainee", "bijbaan",
     "orderpicker", "expediteur", "machinist", "machinebediener",
     "horeca", "restaurant", "kapper", "kapsalon", "haarstylist",
+    "kliniek", "oogkliniek", "tandarts",
+    "uitgeverij", "uitgever", "boeken",
+    "customer goods", "consumer goods",
+    "speelgoed", "huishoudartikelen", "spellen",
     "productie",  # productieleider/productiemedewerker/teamlead productie
     # Retail / beauty / fashion (niet hout/bouw)
     "retail", "winkelketen", "winkelmanager",
