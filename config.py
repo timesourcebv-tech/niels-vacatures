@@ -113,8 +113,11 @@ INDUSTRY_KEYWORDS = [
     "timmerwerk", "timmerindustrie", "schrijnwerkerij",
     "parket", "houten vloeren",
     # Bouwsector — directe afnemers van hout/bouwmateriaal
+    "bouw", "bouwbranche", "bouwsector",
     "aannemer", "aannemerij", "bouwbedrijf",
-    "woningbouw", "utiliteitsbouw",
+    "bouwprojecten", "bouwlogistiek", "bouwmanagement",
+    "woningbouw", "utiliteitsbouw", "infrabouw",
+    "nieuwbouw", "renovatie", "verbouw",
     "prefab", "prefabricage", "prefabbouw",
     # Meubelindustrie / interieurbouw (hout-gebruikers)
     "meubelindustrie", "meubelmaker", "meubelfabrikant",
