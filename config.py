@@ -327,7 +327,10 @@ NEGATIVE_TERMS = [
     # Werkleiding / uitvoering (geen senior commerciële rol)
     "werkvoorbereider", "voorman", "ploegleider",
     "werkleider", "werkmeester", "uitvoerder",
-    "aankomend bedrijfsleider",
+    "aankomend bedrijfsleider", "lijnverantwoordelijke",
+    # Technische / engineering / tekenkamer
+    "tekenaar", "cad-tekenaar", "cad tekenaar",
+    "constructeur", "calculator",
 ]
 
 # Locatie-negatief: niet-Nederlandstalig deel BE en buitenland behalve toegestane
