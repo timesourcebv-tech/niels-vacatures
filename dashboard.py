@@ -106,9 +106,158 @@ PROVINCIES: dict[str, list[str]] = {
 }
 
 st.set_page_config(
-    page_title="Vacatures voor Niels",
+    page_title="Vacaturemonitor — Hout & Bouwmaterialen",
     page_icon="🪵",
     layout="wide",
+)
+
+# Custom styling — ingetogen, hoogwaardig design met houtaccenten
+st.markdown(
+    """
+    <style>
+    /* Globale typografie */
+    html, body, [class*="css"] {
+        font-family: 'Source Serif Pro', 'Georgia', 'Times New Roman', serif;
+    }
+    h1, h2, h3 {
+        font-family: 'Source Serif Pro', 'Georgia', serif;
+        letter-spacing: -0.01em;
+        color: #2A1810;
+    }
+    .stApp {
+        background: linear-gradient(180deg, #F4EFE7 0%, #EFE7D8 100%);
+    }
+
+    /* Header banner */
+    .nv-header {
+        background: linear-gradient(135deg, #3E2818 0%, #5C3A1E 100%);
+        color: #F4EFE7;
+        padding: 1.6rem 2rem;
+        border-radius: 4px;
+        margin: 0 0 1.5rem 0;
+        border-left: 5px solid #C9A063;
+        box-shadow: 0 2px 8px rgba(46, 24, 14, 0.15);
+    }
+    .nv-header h1 {
+        color: #F4EFE7;
+        font-size: 1.7rem;
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+    }
+    .nv-header .nv-subtitle {
+        color: #D4BFA0;
+        font-size: 0.95rem;
+        font-style: italic;
+        margin: 0;
+    }
+
+    /* Metric cards */
+    [data-testid="stMetricValue"] {
+        font-family: 'Source Serif Pro', Georgia, serif;
+        font-weight: 600;
+        color: #3E2818;
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6B5947;
+    }
+
+    /* Vacature-cards */
+    [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
+        background: #FBF7EE;
+        border: 1px solid #D4C4A8 !important;
+        border-radius: 4px !important;
+        box-shadow: 0 1px 3px rgba(46, 24, 14, 0.06);
+        transition: box-shadow 0.15s ease;
+    }
+    [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        box-shadow: 0 3px 10px rgba(46, 24, 14, 0.12);
+    }
+
+    /* Score badge */
+    .nv-score {
+        display: inline-block;
+        padding: 0.32rem 0.7rem;
+        border-radius: 3px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        font-family: 'Source Serif Pro', Georgia, serif;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+    .nv-score-high { background: #2D5016; color: #F4EFE7; }
+    .nv-score-mid  { background: #B8860B; color: #FBF7EE; }
+    .nv-score-low  { background: #8C7560; color: #FBF7EE; }
+
+    /* Vacature-titel */
+    .nv-job-title {
+        font-size: 1.18rem;
+        font-weight: 600;
+        color: #2A1810;
+        margin: 0 0 0.2rem 0;
+        line-height: 1.3;
+    }
+    .nv-job-title a {
+        color: #2A1810;
+        text-decoration: none;
+        border-bottom: 1px solid #C9A063;
+    }
+    .nv-job-title a:hover {
+        color: #5C3A1E;
+        border-bottom-color: #5C3A1E;
+    }
+    .nv-job-meta {
+        color: #4A382A;
+        font-size: 0.94rem;
+        margin: 0 0 0.55rem 0;
+    }
+    .nv-job-meta strong { color: #2A1810; }
+    .nv-job-meta .nv-source {
+        color: #8C7560;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-left: 0.5rem;
+    }
+    .nv-job-summary {
+        color: #4A382A;
+        font-size: 0.93rem;
+        line-height: 1.55;
+        margin: 0.4rem 0 0.5rem 0;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: #EFE7D8;
+        border-right: 1px solid #D4C4A8;
+    }
+    [data-testid="stSidebar"] h2 {
+        color: #3E2818;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border-bottom: 1px solid #C9A063;
+        padding-bottom: 0.4rem;
+    }
+
+    /* Buttons */
+    .stButton button {
+        background: #FBF7EE;
+        border: 1px solid #C9A063;
+        color: #3E2818;
+        font-family: 'Source Serif Pro', Georgia, serif;
+        border-radius: 3px;
+    }
+    .stButton button:hover {
+        background: #C9A063;
+        color: #FBF7EE;
+        border-color: #5C3A1E;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 STATUS_LABELS = {
@@ -137,7 +286,15 @@ def login_gate() -> bool:
     cookies = stx.CookieManager(key="niels_vac_cookies")
     saved_user = cookies.get("niels_username") or ""
 
-    st.title("🪵 Vacatures voor Niels")
+    st.markdown(
+        """
+        <div class="nv-header">
+            <h1>Vacaturemonitor</h1>
+            <p class="nv-subtitle">Hout · Bouwmaterialen · Senior commercieel management</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     with st.form("login"):
         user = st.text_input("Gebruikersnaam", value=saved_user)
         pw = st.text_input("Wachtwoord", type="password")
@@ -165,18 +322,25 @@ def load_df(min_score: int, statuses: list[str]) -> pd.DataFrame:
 
 
 def header() -> None:
-    st.title("🪵 Vacatures voor Niels Hallingse")
-    st.caption(
-        f"Senior commerciële & leidinggevende rollen in de houtwereld — "
-        f"{NIELS_PROFILE['experience_years']}+ jaar ervaring, "
-        f"laatste functie {NIELS_PROFILE['career_history'][-1]}"
+    st.markdown(
+        f"""
+        <div class="nv-header">
+            <h1>Vacaturemonitor — Hout &amp; Bouwmaterialen</h1>
+            <p class="nv-subtitle">
+                Senior commerciële &amp; leidinggevende rollen ·
+                {NIELS_PROFILE['experience_years']}+ jaar ervaring ·
+                {NIELS_PROFILE['career_history'][-1]}
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     s = stats()
     cols = st.columns(5)
-    cols[0].metric("Totaal", s.get("total") or 0)
+    cols[0].metric("Vacatures", s.get("total") or 0)
     cols[1].metric("Nieuw", s.get("new_count") or 0)
-    cols[2].metric("🪵 Favorieten", s.get("favorite_count") or 0)
+    cols[2].metric("Favorieten", s.get("favorite_count") or 0)
     cols[3].metric("Gesolliciteerd", s.get("applied_count") or 0)
     cols[4].metric("Afgewezen", s.get("rejected_count") or 0)
     last_run = (s.get("last_run") or "—")[:16].replace("T", " ")
@@ -192,7 +356,7 @@ def sidebar_filters() -> tuple[int, list[str], str, list[str], list[str], bool]:
             default=["new"],
             format_func=lambda x: STATUS_LABELS[x],
         )
-        favorites_only = st.checkbox("🪵 Alleen favorieten", value=False)
+        favorites_only = st.checkbox("Alleen favorieten", value=False)
 
         provincies = st.multiselect(
             "Provincies",
@@ -236,49 +400,62 @@ def render_job_card(row: pd.Series) -> None:
     source = row["source"]
     is_fav = bool(row.get("favorite"))
 
-    score_emoji = "🟢" if score >= 70 else ("🟡" if score >= 50 else "⚪")
-    fav_icon = "🪵❤️" if is_fav else "🤍"
-    fav_help = "Verwijder uit favorieten" if is_fav else "Voeg toe aan favorieten"
+    score_class = (
+        "nv-score-high" if score >= 70
+        else "nv-score-mid" if score >= 50
+        else "nv-score-low"
+    )
+    fav_icon = "🪵 ❤" if is_fav else "🤍"
+    fav_help = "Verwijder uit favorieten" if is_fav else "Markeer als favoriet"
 
     with st.container(border=True):
-        c1, c2 = st.columns([5, 2])
+        c1, c2 = st.columns([5, 1.6])
         with c1:
-            st.markdown(f"### {score_emoji} [{title}]({row['url']})")
             st.markdown(
-                f"**{company}** · {location} · "
-                f"<sub>via {source} · {posted}</sub>",
+                f"""
+                <div class="nv-job-title"><a href="{row['url']}" target="_blank">{title}</a></div>
+                <div class="nv-job-meta">
+                    <strong>{company}</strong> · {location}
+                    <span class="nv-source">{source} · {posted}</span>
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
             desc_raw = row.get("description")
             if desc_raw:
                 desc = str(desc_raw).strip()
-                short = desc if len(desc) <= 280 else desc[:277].rsplit(" ", 1)[0] + "…"
+                short = desc if len(desc) <= 320 else desc[:317].rsplit(" ", 1)[0] + "…"
                 st.markdown(
-                    f"<div style='color:#5B4A36;font-size:0.92rem;margin:0.3rem 0;'>{short}</div>",
+                    f"<div class='nv-job-summary'>{short}</div>",
                     unsafe_allow_html=True,
                 )
-                if len(desc) > 280:
+                if len(desc) > 320:
                     with st.expander("Volledige beschrijving"):
                         st.write(desc)
         with c2:
-            top_l, top_r = st.columns([1, 2])
-            with top_l:
-                if st.button(fav_icon, key=f"fav_{row['id']}", help=fav_help):
+            st.markdown(
+                f"<div style='text-align:right;margin-bottom:0.5rem;'>"
+                f"<span class='nv-score {score_class}'>{score} / 100</span>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+            b_l, b_r = st.columns([1, 1])
+            with b_l:
+                if st.button(fav_icon, key=f"fav_{row['id']}", help=fav_help, use_container_width=True):
                     toggle_favorite(int(row["id"]))
                     st.rerun()
-            with top_r:
-                st.metric("Match", f"{score}/100", label_visibility="collapsed")
-            new_status = st.selectbox(
-                "Status",
-                STATUS_OPTIONS,
-                index=STATUS_OPTIONS.index(status),
-                format_func=lambda s: STATUS_LABELS[s],
-                key=f"status_{row['id']}",
-                label_visibility="collapsed",
-            )
-            if new_status != status:
-                update_status(int(row["id"]), new_status, None)
-                st.rerun()
+            with b_r:
+                new_status = st.selectbox(
+                    "Status",
+                    STATUS_OPTIONS,
+                    index=STATUS_OPTIONS.index(status),
+                    format_func=lambda s: STATUS_LABELS[s],
+                    key=f"status_{row['id']}",
+                    label_visibility="collapsed",
+                )
+                if new_status != status:
+                    update_status(int(row["id"]), new_status, None)
+                    st.rerun()
 
 
 def main() -> None:
