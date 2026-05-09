@@ -318,11 +318,16 @@ NEGATIVE_TERMS = [
     "verkoopmedewerker", "winkelmedewerker",
     # Productie / montage / vakvaardig
     "productiemedewerker", "productiehulp",
-    "montagemedewerker", "monteur",
-    "machinebediener", "machinaal houtbewerker", "houtbewerker",
+    "montagemedewerker", "monteur", "servicemonteur",
+    "operator", "machine-operator", "machinist", "machinebediener",
+    "machinaal houtbewerker", "houtbewerker",
     "timmerman", "werkplaatstimmerman", "schrijnwerker",
     "elektricien", "schilder", "loodgieter",
-    "bouwvakker", "metselaar",
+    "bouwvakker", "metselaar", "stratenmaker",
+    # Werkleiding / uitvoering (geen senior commerciële rol)
+    "werkvoorbereider", "voorman", "ploegleider",
+    "werkleider", "werkmeester", "uitvoerder",
+    "aankomend bedrijfsleider",
 ]
 
 # Locatie-negatief: niet-Nederlandstalig deel BE en buitenland behalve toegestane
