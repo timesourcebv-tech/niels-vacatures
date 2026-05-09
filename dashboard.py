@@ -588,8 +588,8 @@ def header() -> None:
     active = st.session_state["active_view"]
 
     tiles = [
-        ("all", "Vacatures", s.get("total") or 0),
-        ("new", "Nieuw", s.get("new_count") or 0),
+        ("all", "Totaal", s.get("total") or 0),
+        ("new", "Te bekijken", s.get("new_count") or 0),
         ("fav", "Favorieten", s.get("favorite_count") or 0),
         ("applied", "Gesolliciteerd", s.get("applied_count") or 0),
         ("rejected", "Afgewezen", s.get("rejected_count") or 0),
