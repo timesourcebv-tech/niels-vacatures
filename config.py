@@ -338,7 +338,11 @@ NEGATIVE_TERMS = [
     "aankomend bedrijfsleider", "lijnverantwoordelijke",
     # Technische / engineering / tekenkamer
     "tekenaar", "cad-tekenaar", "cad tekenaar",
-    "constructeur", "calculator",
+    "constructeur", "calculator", "modelmaker",
+    # Zorg / kinderopvang (geheel andere branche)
+    "verpleegkundige", "verzorgende", "zorgkundige",
+    "ziekenverzorgende", "zorgmedewerker", "thuiszorg",
+    "pedagogisch", "kinderopvang", "babygroep",
 ]
 
 # Locatie-negatief: niet-Nederlandstalig deel BE en buitenland behalve toegestane
