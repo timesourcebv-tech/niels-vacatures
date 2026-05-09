@@ -169,11 +169,24 @@ else:
         "score_low_bg":  "#F2F2F7", "score_low_fg":  "#6E6E73",
     }
 
-# Apple-geïnspireerde styling — clean, leesbaar, ruimtelijk
+# zen.com-geïnspireerde styling — forest-groen primair, lime accent
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+        --nv-bg: #FAFAF7;
+        --nv-card: #FFFFFF;
+        --nv-border: #E8E6DF;
+        --nv-text: #0E1E1A;
+        --nv-text-2: #4A5A55;
+        --nv-text-3: #8B958F;
+        --nv-primary: #0F4C3A;
+        --nv-primary-hover: #0A3A2C;
+        --nv-accent: #C7F284;
+        --nv-tag-bg: #EFEDE6;
+    }
 
     /* Globale typografie — Inter (universeel goed leesbaar) */
     html, body, [class*="css"], .stApp, [data-testid="stSidebar"],
@@ -188,7 +201,7 @@ st.markdown(
     h1, h2, h3, h4 {
         font-family: 'Inter', -apple-system, sans-serif !important;
         letter-spacing: -0.01em;
-        color: #1D1D1F;
+        color: var(--nv-text);
         font-weight: 600;
     }
     .stApp {
@@ -205,7 +218,7 @@ st.markdown(
         font-size: 2.1rem;
         font-weight: 700;
         letter-spacing: -0.015em;
-        color: #1D1D1F;
+        color: var(--nv-text);
         margin: 0 0 0.4rem 0;
         line-height: 1.2;
     }
@@ -225,7 +238,7 @@ st.markdown(
     }
     [data-testid="stMetricValue"] {
         font-weight: 600;
-        color: #1D1D1F;
+        color: var(--nv-text);
         font-size: 1.6rem;
         letter-spacing: -0.02em;
     }
@@ -264,12 +277,12 @@ st.markdown(
     .nv-job-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #1D1D1F;
+        color: var(--nv-text);
         margin: 0 0 0.3rem 0;
         line-height: 1.35;
     }
     .nv-job-title a {
-        color: #1D1D1F;
+        color: var(--nv-text);
         text-decoration: none;
     }
     .nv-job-title a:hover {
@@ -282,7 +295,7 @@ st.markdown(
         line-height: 1.45;
     }
     .nv-job-meta strong {
-        color: #1D1D1F;
+        color: var(--nv-text);
         font-weight: 600;
     }
     .nv-job-meta .nv-source {
@@ -303,7 +316,7 @@ st.markdown(
         border-right: 1px solid #E5E5E7;
     }
     [data-testid="stSidebar"] h2 {
-        color: #1D1D1F;
+        color: var(--nv-text);
         font-size: 1.15rem;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -312,7 +325,7 @@ st.markdown(
         margin-bottom: 0.5rem;
     }
     [data-testid="stSidebar"] label {
-        color: #1D1D1F;
+        color: var(--nv-text);
         font-weight: 500;
         font-size: 0.95rem;
     }
@@ -320,7 +333,7 @@ st.markdown(
     /* Multiselect tags / pillen — neutraal Apple-grijs i.p.v. donker bruin */
     [data-baseweb="tag"] {
         background-color: #E8E8ED !important;
-        color: #1D1D1F !important;
+        color: var(--nv-text) !important;
         border-radius: 6px !important;
         border: none !important;
         font-weight: 500 !important;
@@ -346,7 +359,7 @@ st.markdown(
     .stButton button {
         background: #FFFFFF;
         border: 1px solid #D2D2D7;
-        color: #1D1D1F;
+        color: var(--nv-text);
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.15s ease;
