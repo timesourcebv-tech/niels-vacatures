@@ -57,6 +57,10 @@ def score_job(
     elif _word_match(ROLE_KEYWORDS, d):
         score += 10
 
+    # Extra boost voor 'manager' in titel — Niels zoekt expliciet managementrollen
+    if re.search(r"\bmanager\b", t, re.IGNORECASE):
+        score += 10
+
     # Industrie / hout — woordgrenzen verplicht
     industry_in_title = _word_match(INDUSTRY_KEYWORDS, t)
     industry_in_company = _word_match(INDUSTRY_KEYWORDS, co)
