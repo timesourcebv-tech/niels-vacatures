@@ -212,7 +212,7 @@ st.markdown(
     .nv-header {
         padding: 2rem 0 1rem 0;
         margin: 0 0 1.5rem 0;
-        border-bottom: 1px solid #E5E5E7;
+        border-bottom: 1px solid var(--nv-border);
     }
     .nv-header h1 {
         font-size: 2.1rem;
@@ -223,7 +223,7 @@ st.markdown(
         line-height: 1.2;
     }
     .nv-header .nv-subtitle {
-        color: #6E6E73;
+        color: var(--nv-text-3);
         font-size: 1.05rem;
         font-weight: 400;
         margin: 0;
@@ -232,7 +232,7 @@ st.markdown(
 
     /* Metrics */
     [data-testid="stMetric"] {
-        background: #F5F5F7;
+        background: var(--nv-card);
         padding: 1rem 1.2rem;
         border-radius: 12px;
     }
@@ -244,14 +244,14 @@ st.markdown(
     }
     [data-testid="stMetricLabel"] {
         font-size: 0.85rem;
-        color: #6E6E73;
+        color: var(--nv-text-3);
         font-weight: 500;
     }
 
     /* Vacature-cards */
     [data-testid="stContainer"] > [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #FFFFFF !important;
-        border: 1px solid #E5E5E7 !important;
+        background: var(--nv-card) !important;
+        border: 1px solid var(--nv-border) !important;
         border-radius: 14px !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -271,7 +271,7 @@ st.markdown(
     }
     .nv-score-high { background: #E8F5E9; color: #1B5E20; }
     .nv-score-mid  { background: #FFF3E0; color: #B26A00; }
-    .nv-score-low  { background: #F2F2F7; color: #6E6E73; }
+    .nv-score-low  { background: #F2F2F7; color: var(--nv-text-3); }
 
     /* Vacature-titel */
     .nv-job-title {
@@ -286,7 +286,7 @@ st.markdown(
         text-decoration: none;
     }
     .nv-job-title a:hover {
-        color: #0071E3;
+        color: var(--nv-primary);
     }
     .nv-job-meta {
         color: #424245;
@@ -299,7 +299,7 @@ st.markdown(
         font-weight: 600;
     }
     .nv-job-meta .nv-source {
-        color: #86868B;
+        color: var(--nv-text-3);
         font-size: 0.85rem;
         margin-left: 0.5rem;
     }
@@ -312,7 +312,7 @@ st.markdown(
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: #F5F5F7;
+        background: var(--nv-card);
         border-right: 1px solid #E5E5E7;
     }
     [data-testid="stSidebar"] h2 {
@@ -339,8 +339,8 @@ st.markdown(
         font-weight: 500 !important;
     }
     [data-baseweb="tag"] svg {
-        color: #6E6E73 !important;
-        fill: #6E6E73 !important;
+        color: var(--nv-text-3) !important;
+        fill: var(--nv-text-3) !important;
     }
     [data-baseweb="tag"]:hover {
         background-color: #DCDCE0 !important;
@@ -350,36 +350,36 @@ st.markdown(
     [data-baseweb="select"] > div,
     .stTextInput input,
     .stTextArea textarea {
-        background: #FFFFFF !important;
+        background: var(--nv-card) !important;
         border-radius: 8px !important;
-        border-color: #D2D2D7 !important;
+        border-color: var(--nv-border) !important;
     }
 
     /* Buttons */
     .stButton button {
         background: #FFFFFF;
-        border: 1px solid #D2D2D7;
+        border: 1px solid var(--nv-border);
         color: var(--nv-text);
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.15s ease;
     }
     .stButton button:hover {
-        background: #F5F5F7;
+        background: var(--nv-card);
         border-color: #B0B0B5;
     }
     .stButton button[kind="primary"], .stFormSubmitButton button {
-        background: #0071E3;
+        background: var(--nv-primary);
         color: #FFFFFF;
         border: none;
     }
     .stButton button[kind="primary"]:hover, .stFormSubmitButton button:hover {
-        background: #0077ED;
+        background: var(--nv-primary-hover);
     }
 
     /* Captions kleiner en grijzer */
     .stCaption, [data-testid="stCaptionContainer"] {
-        color: #86868B;
+        color: var(--nv-text-3);
         font-size: 0.88rem;
     }
 
