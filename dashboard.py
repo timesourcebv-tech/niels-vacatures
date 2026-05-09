@@ -169,18 +169,28 @@ else:
         "score_low_bg":  "#F2F2F7", "score_low_fg":  "#6E6E73",
     }
 
-st.markdown(
-    """<div style="background:#FF0000;color:#FFFFFF;padding:1rem;text-align:center;font-size:1.3rem;font-weight:bold;border-radius:8px;margin-bottom:1rem;">
-🔴 CSS-INJECTIE TEST — als je dit ziet, werkt custom CSS
-    </div>""",
-    unsafe_allow_html=True,
-)
-
 # zen.com-geïnspireerde styling — forest-groen primair, lime accent
+# Hoge-specificity selectors via [data-testid=...] om Streamlit's eigen CSS te overschrijven
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    /* Hoge-specificity globale typografie — Streamlit gebruikt 'Source Sans 3' standaard */
+    [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer"] *,
+    [data-testid="stMain"], [data-testid="stMain"] *,
+    [data-testid="stSidebar"], [data-testid="stSidebar"] *,
+    [data-testid="stHeader"], [data-testid="stHeader"] *,
+    section.main, section.main *,
+    .stApp, .stApp * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    /* Achtergrond — meerdere selectors voor zekerheid */
+    [data-testid="stAppViewContainer"] { background: #FAFAF7 !important; }
+    [data-testid="stMain"] { background: #FAFAF7 !important; }
+    section.main { background: #FAFAF7 !important; }
+    .stApp { background: #FAFAF7 !important; }
 
     :root {
         --nv-bg: #FAFAF7;
