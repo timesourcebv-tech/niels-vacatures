@@ -32,10 +32,16 @@ def scrape_jooble(
 
     region = (location or "nederland").lower()
     is_be = region in ("vlaanderen", "belgium", "belgië", "belgie", "antwerpen", "gent", "brugge")
-    subdomain = "be" if is_be else "nl"
-    where = "Vlaanderen" if is_be else "Nederland"
+    where = "Belgium" if is_be else "Netherlands"
+    src_label = "be" if is_be else "nl"
 
-    endpoint = f"https://{subdomain}.jooble.org/api/{api_key}"
+    # Global endpoint — country-subdomains geven 403 met onze key.
+    endpoint = f"https://jooble.org/api/{api_key}"
+    expected_loc_terms = (
+        ["belgium", "belgië", "belgie", "vlaanderen", "antwerp", "gent", "brugge", "kortrijk", "leuven", "hasselt"]
+        if is_be else
+        ["netherlands", "nederland", " nl"]
+    )
     headers = {
         "User-Agent": USER_AGENT,
         "Content-Type": "application/json",
@@ -81,13 +87,18 @@ def scrape_jooble(
             url = item.get("link") or ""
             if not url:
                 continue
+            loc_str = (item.get("location") or "").lower()
+            # Skip vacatures buiten NL/BE (Jooble returneert wereldwijd zonder strikt filter)
+            if not any(t in loc_str for t in expected_loc_terms):
+                continue
+
             sid = url.split("?")[0].rstrip("/").split("/")[-1] or url
             if sid in seen:
                 continue
             seen.add(sid)
 
             results.append({
-                "source": f"jooble-{subdomain}",
+                "source": f"jooble-{src_label}",
                 "source_id": sid,
                 "title": (item.get("title") or "")[:200],
                 "company": item.get("company") or None,
@@ -104,5 +115,5 @@ def scrape_jooble(
             break
         page += 1
 
-    log.info("Jooble-%s '%s': %d hits", subdomain.upper(), query, len(results))
+    log.info("Jooble-%s '%s': %d hits", src_label.upper(), query, len(results))
     return results
