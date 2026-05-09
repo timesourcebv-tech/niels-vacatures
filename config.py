@@ -219,6 +219,24 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "beauty", "cosmetica", "parfumerie", "drogisterij",
     "fashion", "mode-", "modemerk", "kleding", "schoenen",
     "supermarkt", "buurtsuper",
+    # Healthcare / pharma / zorg
+    "healthcare", "gezondheidszorg", "zorgsector", "zorginstelling",
+    "pharma", "farma", "farmaceutisch", "pharmaceutical",
+    "medisch", "medical", "biotech",
+    # Food / voeding / FMCG
+    "food", "voeding", "voedingssector", "foodservice",
+    "fmcg", "consumer goods",
+    "drank", "beverage", "snack", "dairy", "zuivel",
+    # Finance / verzekeringen
+    "insurance", "verzekering", "verzekeraar", "verzekeringen",
+    "finance ", "banking", "bankwezen", "bank ",
+    # Automotive / IT / energie / onderwijs
+    "automotive", "autohandel", "autobedrijf",
+    "telecom", "software", " it ",
+    "energiesector", "utilities",
+    "onderwijs", "school", "universiteit", "hogeschool",
+    # Werving / staffing (Niels' rol is bij eindwerkgever, niet bij detachering)
+    "werving en selectie", "wervingsbureau", "detachering",
 ]
 
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)

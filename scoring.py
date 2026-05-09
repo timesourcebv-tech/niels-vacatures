@@ -121,14 +121,10 @@ def score_job(
         score -= 30
 
     # Cap op 35 als geen enkel hout/industrie-signaal — voorkomt false positives.
-    # Verzacht als de titel sterk match maakt op Niels' doelrollen
-    # (Sales/Business/Developer/Manager combos).
+    # Verzacht alleen als de titel sterk match maakt OP Niels' doelrollen EN
+    # de description tenminste een vakgebied-hint geeft. Dit voorkomt dat
+    # "Senior Business Development Manager FMCG" hoog scoort.
     if not has_industry_signal:
-        if high_value_matches >= 3:
-            pass  # bv. "Senior Business Development Manager" — geen cap
-        elif high_value_matches >= 2:
-            score = min(score, 70)
-        else:
-            score = min(score, 35)
+        score = min(score, 35)
 
     return max(0, min(100, score))
