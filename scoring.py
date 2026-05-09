@@ -14,6 +14,7 @@ from config import (
     CITIES_BE_NL,
     CITIES_NEAR,
     CITIES_RANDSTAD,
+    HIGH_VALUE_TITLE_TERMS,
     HOUT_COMPANIES,
     INDUSTRY_KEYWORDS,
     LEADERSHIP_TERMS,
@@ -57,9 +58,13 @@ def score_job(
     elif _word_match(ROLE_KEYWORDS, d):
         score += 10
 
-    # Extra boost voor 'manager' in titel — Niels zoekt expliciet managementrollen
-    if re.search(r"\bmanager\b", t, re.IGNORECASE):
-        score += 10
+    # Extra boost voor doelrol-termen in titel (manager/business/developer/sales/etc.)
+    high_value_matches = sum(
+        1 for term in HIGH_VALUE_TITLE_TERMS
+        if re.search(r"\b" + re.escape(term) + r"\b", t, re.IGNORECASE)
+    )
+    if high_value_matches:
+        score += min(high_value_matches * 7, 20)
 
     # Industrie / hout — woordgrenzen verplicht
     industry_in_title = _word_match(INDUSTRY_KEYWORDS, t)

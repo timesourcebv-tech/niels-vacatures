@@ -189,6 +189,12 @@ BOUWMATERIAAL_COMPANIES = BOUWMATERIAAL_COMPANIES_NL + BOUWMATERIAAL_COMPANIES_B
 
 HOUT_COMPANIES = HOUT_COMPANIES_NL + HOUT_COMPANIES_BE + BOUWMATERIAAL_COMPANIES
 
+# Termen in titel die een hogere match-score verdienen (Niels' doelrollen)
+HIGH_VALUE_TITLE_TERMS = [
+    "manager", "business", "developer", "sales",
+    "bedrijfsleider", "vestigingsmanager",
+]
+
 # Recruitment-bureaus actief in bouw/hout/industrie (matcht naam in vacature)
 RECRUITERS_BUILDING = [
     "bouwteam", "westerduin", "continu", "profmatch",
@@ -307,6 +313,8 @@ NEGATIVE_TERMS = [
     "junior", "medior", "stagiair", "stage ", " stage", "intern ",
     "trainee", "starter", "bijbaan", "parttime student",
     "studentenbaan", "zaterdaghulp",
+    "leerling", "leer-werk", "leerwerk", "bbl", "bbl-traject",
+    "duaal traject", "leerlingplek", "mbo-traject", "werkstudent",
     # Operationele / logistieke rollen (geen senior commerciële of management rol)
     "magazijnmedewerker", "magazijnhulp", "magazijnier",
     "chauffeur", "heftruckchauffeur", "vrachtwagenchauffeur",
