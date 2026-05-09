@@ -235,6 +235,16 @@ HIGH_VALUE_TITLE_TERMS = [
     "bedrijfsleider", "vestigingsmanager",
 ]
 
+# Soft uitsluit — alleen excluden als geen senior leadership-term in titel.
+# 'Technisch Commercieel Manager' / 'Specialist Accountmanager' blijven dus door.
+SOFT_NEGATIVE_TITLE_SUBSTRINGS = [
+    "specialist", "technisch", "technical",
+]
+SENIOR_OK_PATTERN = (
+    r"\b(manager|managing|directeur|director|bedrijfsleider|vestigingsmanager"
+    r"|country|general|head of|chief|hoofd|leader|lead)\b"
+)
+
 # HARD UITSLUITEN — als deze substring in titel zit, score = 0.
 # Substring-match (niet word-boundary), dus 'magazijn' matcht ook 'magazijnmedewerker'.
 STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
@@ -285,8 +295,6 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "ingenieur", "engineer", "r&d", "research",
     "innovator", "innovatie ingenieur",
     "kwaliteits", "qhse", "lab ", "laborant",
-    "technisch", "technical",
-    "specialist",
     "modelleur", "modeleur",
     # Vakvaardigheid / uitvoerend in bouw
     "meubelmaker", "houtskeletbouwer",

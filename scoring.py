@@ -23,6 +23,8 @@ from config import (
     POSITIVE_BOOST,
     RECRUITERS_BUILDING,
     ROLE_KEYWORDS,
+    SENIOR_OK_PATTERN,
+    SOFT_NEGATIVE_TITLE_SUBSTRINGS,
     STRICT_NEGATIVE_TITLE_SUBSTRINGS,
 )
 
@@ -52,6 +54,12 @@ def score_job(
     # Hard exclude — substring-match in titel (operationeel/zorg/etc.)
     if any(sub in t for sub in STRICT_NEGATIVE_TITLE_SUBSTRINGS):
         return 0
+
+    # Soft exclude — alleen als titel geen senior leadership-term heeft.
+    # ('Technisch Commercieel Manager' blijft, 'Technisch Adviseur' gaat weg.)
+    if any(sub in t for sub in SOFT_NEGATIVE_TITLE_SUBSTRINGS):
+        if not re.search(SENIOR_OK_PATTERN, t, re.IGNORECASE):
+            return 0
 
     # Rol-niveau verplicht in titel: ROLE_KEYWORD of HIGH_VALUE term.
     # Anders geen senior commerciële rol — uitsluiten.
