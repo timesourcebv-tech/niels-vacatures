@@ -111,19 +111,25 @@ st.set_page_config(
     layout="wide",
 )
 
-# Apple-geïnspireerde styling — clean, sans-serif, ruimtelijk
+# Apple-geïnspireerde styling — clean, leesbaar, ruimtelijk
 st.markdown(
     """
     <style>
-    /* Globale typografie — Apple system fonts */
-    html, body, [class*="css"], .stApp, [data-testid="stSidebar"] {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* Globale typografie — Inter (universeel goed leesbaar) */
+    html, body, [class*="css"], .stApp, [data-testid="stSidebar"],
+    .stMarkdown, .stMarkdown p, .stMarkdown div, button, input, select, textarea {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
+    body, .stApp {
+        font-size: 16px;
+    }
     h1, h2, h3, h4 {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif !important;
-        letter-spacing: -0.022em;
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        letter-spacing: -0.01em;
         color: #1D1D1F;
         font-weight: 600;
     }
@@ -138,18 +144,19 @@ st.markdown(
         border-bottom: 1px solid #E5E5E7;
     }
     .nv-header h1 {
-        font-size: 2rem;
+        font-size: 2.1rem;
         font-weight: 700;
-        letter-spacing: -0.025em;
+        letter-spacing: -0.015em;
         color: #1D1D1F;
         margin: 0 0 0.4rem 0;
-        line-height: 1.15;
+        line-height: 1.2;
     }
     .nv-header .nv-subtitle {
         color: #6E6E73;
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: 400;
         margin: 0;
+        line-height: 1.4;
     }
 
     /* Metrics */
@@ -185,11 +192,10 @@ st.markdown(
     /* Score badge */
     .nv-score {
         display: inline-block;
-        padding: 0.32rem 0.85rem;
+        padding: 0.35rem 0.95rem;
         border-radius: 980px;
         font-weight: 600;
-        font-size: 0.82rem;
-        letter-spacing: -0.01em;
+        font-size: 0.9rem;
         white-space: nowrap;
     }
     .nv-score-high { background: #E8F5E9; color: #1B5E20; }
@@ -198,12 +204,11 @@ st.markdown(
 
     /* Vacature-titel */
     .nv-job-title {
-        font-size: 1.15rem;
+        font-size: 1.25rem;
         font-weight: 600;
         color: #1D1D1F;
-        margin: 0 0 0.25rem 0;
-        line-height: 1.3;
-        letter-spacing: -0.015em;
+        margin: 0 0 0.3rem 0;
+        line-height: 1.35;
     }
     .nv-job-title a {
         color: #1D1D1F;
@@ -214,23 +219,24 @@ st.markdown(
     }
     .nv-job-meta {
         color: #424245;
-        font-size: 0.93rem;
+        font-size: 0.98rem;
         margin: 0 0 0.6rem 0;
+        line-height: 1.45;
     }
     .nv-job-meta strong {
         color: #1D1D1F;
-        font-weight: 500;
+        font-weight: 600;
     }
     .nv-job-meta .nv-source {
         color: #86868B;
-        font-size: 0.78rem;
+        font-size: 0.85rem;
         margin-left: 0.5rem;
     }
     .nv-job-summary {
-        color: #424245;
-        font-size: 0.92rem;
-        line-height: 1.55;
-        margin: 0.35rem 0 0.4rem 0;
+        color: #3A3A3C;
+        font-size: 0.97rem;
+        line-height: 1.6;
+        margin: 0.4rem 0 0.5rem 0;
     }
 
     /* Sidebar */
@@ -250,7 +256,7 @@ st.markdown(
     [data-testid="stSidebar"] label {
         color: #1D1D1F;
         font-weight: 500;
-        font-size: 0.88rem;
+        font-size: 0.95rem;
     }
 
     /* Multiselect tags / pillen — neutraal Apple-grijs i.p.v. donker bruin */
@@ -303,7 +309,7 @@ st.markdown(
     /* Captions kleiner en grijzer */
     .stCaption, [data-testid="stCaptionContainer"] {
         color: #86868B;
-        font-size: 0.83rem;
+        font-size: 0.88rem;
     }
     </style>
     """,
