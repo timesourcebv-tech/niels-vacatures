@@ -278,6 +278,10 @@ STRICT_NEGATIVE_TITLE_SUBSTRINGS = [
     "devops", "sysadmin", "scrum", "qa engineer", "tester",
     "consultant",
     "view job opportunity",
+    # Industriële automatisering / elektrotechniek (niet hout/bouw)
+    "automation", "automatisering", "automatisatie",
+    "elektrotechniek", "aandrijftechniek", "mechatron",
+    "siemens", "plc",
     "productie",  # productieleider/productiemedewerker/teamlead productie
     # Retail / beauty / fashion (niet hout/bouw)
     "retail", "winkelketen", "winkelmanager",
