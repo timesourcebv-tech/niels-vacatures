@@ -1,7 +1,7 @@
 # Vacatures voor Niels — toolset
 
 Geautomatiseerd scannen van de markt op senior commerciële & leidinggevende
-rollen in de houtwereld voor **Niels Hallingse** (CV 2026 leidend). Dagelijks
+rollen in de houtwereld voor **Niels** (CV 2026 leidend). Dagelijks
 ophalen via GitHub Actions, scoren op fit met zijn profiel, presenteren in
 een Streamlit-dashboard dat online beschikbaar is.
 
